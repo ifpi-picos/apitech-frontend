@@ -9,7 +9,7 @@ git clone
 npm install
 ```
 
-### Utilizando o React-Native-Cli para rodar o projeto
+### Utilizando o Expo para rodar o projeto
 ```
 npx expo start
 ```
@@ -21,6 +21,7 @@ Link para configurar o ambiente: https://react-native.rocketseat.dev/expo-manage
 ## Tecnologias utilizadas
 * Typescript
 * Styled-Components
+* Native-Base (https://nativebase.io/)
 * React-Native
 * Expo
 
