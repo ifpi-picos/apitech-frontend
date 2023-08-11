@@ -1,5 +1,5 @@
-import { View, Text, StatusBar } from 'react-native';
-import { SignIn } from './src/screens/SignIn/Index';
+import { StatusBar } from 'react-native';
+import { SignIn } from './src/screens/SignIn';
 import { NativeBaseProvider } from 'native-base'; 
 
 import { THEME } from './src/theme';
@@ -21,8 +21,7 @@ export default function App() {
       <StatusBar 
         translucent
       />
-      <Loading />
-      {/* <SignIn /> */}
+      {fontsLoaded ? <SignIn /> : <Loading />}
     </NativeBaseProvider>
   );
 }
