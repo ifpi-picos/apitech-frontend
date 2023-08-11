@@ -7,7 +7,7 @@ export const THEME = extendTheme(
       BLACK: '#000000',
   
       RED_LIGHT: '#EB7A53',
-      YELLOW: '#F03434',
+      RED_MID: '#F03434',
       YELLOW: '#F7D44C',
       BLUE: '#98B7DB',
       GREEN: '#A8D672',
@@ -24,19 +24,18 @@ export const THEME = extendTheme(
       },
   
     },
-    FONT_FAMILY: {
-      REGULAR: 'Roboto_400Regular',
-      BOLD: 'Roboto_700Bold'
+    fonts: {
+      heading: "Roboto_700Bold",
+      body: "Roboto_400Regular",
     },
-  
-    FONT_SIZE: {
-      XS: 12,
-      SM: 14,
-      MD: 16,
-      LG: 18,
-      XL: 20,
-      XXL: 24,
-      XXXL: 32,
+    fontSizes: {
+      xs: 12,
+      sm: 14,
+      md: 16,
+      lg: 18,
+      xl: 20,
+      xxl: 24,
+      xxxl: 28,
     },
     sizes: {
       14: 56,
