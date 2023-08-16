@@ -1,5 +1,6 @@
 import { Center, Heading, Text, VStack } from "native-base"
 import { Input } from "../components/Input";
+import { Button } from "../components/Button";
 
 
 export function SignIn() {
@@ -14,7 +15,7 @@ export function SignIn() {
         </Heading>
       </Center>
       <Center>
-        <Heading color="gray.700"fontSize="xl" mb={6} fontFamily="heading">
+        <Heading color="gray.700"fontSize="xxl" mb={6} fontFamily="heading">
           Acesse sua conta
         </Heading>
 
@@ -27,6 +28,10 @@ export function SignIn() {
         <Input 
           placeholder="Senha"
           secureTextEntry
+        />
+
+        <Button 
+          title="Acessar"
         />
       </Center>
 
