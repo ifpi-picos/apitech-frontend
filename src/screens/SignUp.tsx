@@ -41,7 +41,7 @@ export function SignUp() {
           />
 
           <Input
-            placeholder="Confirme  a Senha"
+            placeholder="Confirme a Senha"
             secureTextEntry
           />
 
