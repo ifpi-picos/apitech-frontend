@@ -1,17 +1,27 @@
+import { useNavigation } from "@react-navigation/native";
 import { Center, Heading, Text, VStack, ScrollView } from "native-base"
 import { Platform } from "react-native";
+
+import { AuthNavigatorRoutesProps } from "../routes/auth.routes";
 
 import { Input } from "../components/Input";
 import { Button } from "../components/Button";
 
 
 export function SignIn() {
+
+  const navigation = useNavigation<AuthNavigatorRoutesProps>();
+
+  function handleNewAccount() {
+    navigation.navigate("signUp");
+  }
+
   return (
     <ScrollView
       contentContainerStyle={{ flexGrow: 1 }}
       showsVerticalScrollIndicator={false}
     >
-      <VStack flex={1} bg="WHITE" px={10} pb={Platform.OS === "ios" ? 40 : 16}>
+      <VStack flex={1} px={10} pb={Platform.OS === "ios" ? 40 : 16}>
         <Center my={24}>
           <Heading color="gray.700" mr={8} lineHeight={"xs"} fontSize="5xl" fontFamily="heading">
             Api
@@ -55,6 +65,7 @@ export function SignIn() {
         <Button
           title="Registrar-se"
           variant="outline"
+          onPress={handleNewAccount}
         />
       </VStack>
     </ScrollView>

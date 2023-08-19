@@ -3,15 +3,23 @@ import { Platform } from "react-native";
 
 import { Input } from "../components/Input";
 import { Button } from "../components/Button";
+import { useNavigation } from "@react-navigation/native";
 
 
 export function SignUp() {
+
+  const navigation = useNavigation();
+
+  function handleGoBack() {
+    navigation.goBack();
+  }
+  
   return (
     <ScrollView
       contentContainerStyle={{ flexGrow: 1 }}
       showsVerticalScrollIndicator={false}
     >
-      <VStack flex={1} bg="WHITE" px={10} pb={Platform.OS === "ios" ? 40 : 16}>
+      <VStack flex={1} px={10} pb={Platform.OS === "ios" ? 40 : 16}>
         <Center my={24}>
           <Heading color="gray.700" mr={8} lineHeight={"xs"} fontSize="5xl" fontFamily="heading">
             Api
@@ -54,6 +62,7 @@ export function SignUp() {
           mt={20}
           title="Voltar para o login"
           variant="outline"
+          onPress={handleGoBack}
         />
       </VStack>
     </ScrollView>
