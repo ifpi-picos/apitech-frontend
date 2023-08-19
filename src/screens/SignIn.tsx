@@ -35,7 +35,10 @@ export function SignIn() {
         />
       </Center>
 
-
+      <Button 
+          title="Acessar"
+          variant="outline"
+        />
     </VStack>
   );
 }
