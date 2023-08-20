@@ -9,6 +9,7 @@ import ApiarySvg from "../assets/history.svg";
 import { Profile } from "../screens/Profile";
 import { Apiary } from "../screens/Apiary";
 import { Home } from "../screens/Home";
+import { Platform } from "react-native";
 
 type AppRoutes = {
   Início: undefined;
@@ -22,14 +23,25 @@ const { Navigator, Screen } = createBottomTabNavigator<AppRoutes>();
 
 
 export function AppRoutes() {
-  const { sizes } = useTheme();
+  const { sizes, colors } = useTheme();
 
   const iconSize = sizes[10];
 
   return(
     <Navigator
       screenOptions={{ 
-        headerShown: false 
+        headerShown: false,
+        tabBarActiveTintColor: colors.black,
+        tabBarInactiveTintColor: colors.gray[50],
+        
+        tabBarStyle: {
+          backgroundColor: "#A8D672",
+          height: Platform.OS === "android" ? "auto" : 96,
+          paddingBottom: sizes[10],
+          paddingTop: sizes[7],
+          borderTopLeftRadius: 15,
+          borderTopRightRadius: 15,
+        },
       }}
     >
       <Screen
