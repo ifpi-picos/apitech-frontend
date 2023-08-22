@@ -36,9 +36,9 @@ export function AppRoutes() {
         
         tabBarStyle: {
           backgroundColor: "#A8D672",
-          height: Platform.OS === "android" ? "auto" : 96,
-          paddingBottom: sizes[10],
-          paddingTop: sizes[7],
+          height: Platform.OS === "android" ? "auto" : 85,
+          paddingBottom: sizes[5],
+          paddingTop: sizes[4],
           borderTopLeftRadius: 15,
           borderTopRightRadius: 15,
         },
