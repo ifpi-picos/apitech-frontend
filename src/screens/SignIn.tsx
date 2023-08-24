@@ -22,7 +22,7 @@ export function SignIn() {
       showsVerticalScrollIndicator={false}
     >
       <VStack flex={1} px={10} pb={Platform.OS === "ios" ? 40 : 16}>
-        <Center my={24}>
+        <Center mt={10}>
           <Heading color="gray.700" mr={8} lineHeight={"xs"} fontSize="5xl" fontFamily="heading">
             Api
           </Heading>
