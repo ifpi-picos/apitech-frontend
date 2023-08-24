@@ -1,9 +1,13 @@
-import { HStack, Heading, Text, VStack } from "native-base";
+import { HStack, Heading, Text, VStack, Icon } from "native-base";
+import { TouchableOpacity } from "react-native";
+import { MaterialIcons } from '@expo/vector-icons';
+
 
 export function HomeHeader() {
   return (
-      <HStack>
-        <VStack bg='gray.100' width="100%" pt={16} pb={5} px={8} alignItems="start">
+      <HStack bg='gray.100' pt={16} pb={5} px={8} alignItems="center">
+
+        <VStack flex={1}>
           <Text color="gray.700" fontSize="lg">
             Olá,
           </Text>
@@ -13,6 +17,14 @@ export function HomeHeader() {
           </Heading>
         </VStack>
 
+        <TouchableOpacity onPress={() => {}}>
+          <Icon
+            as={MaterialIcons}
+            name="logout"
+            color="gray.700"
+            size={7}
+          />
+        </TouchableOpacity>
         
       </HStack>
     )
