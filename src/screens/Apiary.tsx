@@ -41,7 +41,9 @@ export function Apiary() {
       <VStack flex={1} px={8}>
         <HStack justifyContent="space-between" mb={4}>
           <Heading fontSize="lg">Meus Apiários</Heading>
-          <Text fontSize="lg" ml={2}>(2)</Text>
+          <Text fontSize="lg" ml={2}>
+            ({apiarys.length})
+          </Text>
         </HStack>
 
         <FlatList 
@@ -52,6 +54,11 @@ export function Apiary() {
           )}
           showsVerticalScrollIndicator={false}
           _contentContainerStyle={{ pb: 10 }}
+          contentContainerStyle={ apiarys.length === 0 && { flex: 1, justifyContent: "center" } }
+          ListEmptyComponent={() => (
+            <Text fontSize="lg" textAlign="center">Nenhum apiário cadastrado</Text>
+          )
+          }
         />
 
       </VStack>
