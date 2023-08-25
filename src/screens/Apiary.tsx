@@ -1,24 +1,40 @@
-import { Box, Center, Text } from "native-base";
+import { TouchableOpacity } from "react-native";
+import { Center, Text, VStack, Icon, Heading } from "native-base";
+import { Entypo } from '@expo/vector-icons'; 
+
 import { Button } from "../components/Button";
+import { ScreenHeader } from "../components/ScreenHeader";
 
 export function Apiary() {
   return (
-  <Box flex={1}>
-    <Center mt="20%">
-      <Text fontSize="xxl" fontFamily="heading">
-        Apíario(s)  
-      </Text>
-    </Center>
-    <Center flex={1}>
-      <Button
-          mt={10}
-          title="Adicionar Apíario"
-          variant="outline"
-          height={100}
-          width={300}
-          
-          />
+  <VStack flex={1}>
+    <ScreenHeader title="Apiário(s)" />
+
+    <Center my={5}>
+      <TouchableOpacity 
+        onPress={() => {}}
+        style={{
+          borderWidth: 1,
+          borderColor: 'gray',
+          borderRadius: 8,
+          padding: 16,
+          width: '80%',
+          alignItems: 'center',
+          justifyContent: 'center',
+        }}
+        >
+          <Center>
+            <Icon
+              as={Entypo}
+              name="plus"
+              color="gray.700"
+              size={8} />
+            <Heading fontSize="md">Adicionar Apiário</Heading>
+          </Center>
+        </TouchableOpacity>
       </Center>  
-  </Box>
+
+
+  </VStack>
   )
 };

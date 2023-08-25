@@ -4,7 +4,8 @@ import { createBottomTabNavigator, BottomTabNavigationProp } from "@react-naviga
 
 import HomeSvg from "../assets/home.svg";
 import ProfileSvg from "../assets/profile.svg";
-import ApiarySvg from "../assets/history.svg";
+import ApiarySvg from "../assets/hive.svg";
+
 
 import { Profile } from "../screens/Profile";
 import { Apiary } from "../screens/Apiary";
