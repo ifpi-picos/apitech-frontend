@@ -9,7 +9,7 @@ export function HomeHeader() {
 
         <VStack flex={1}>
           <Text color="gray.700" fontSize="lg">
-            Olá,
+            Olá, Bom dia
           </Text>
 
           <Heading color="gray.700" fontSize="lg">
