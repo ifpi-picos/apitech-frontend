@@ -18,23 +18,23 @@ export function Apiary() {
         <TouchableOpacity
           onPress={() => { }}
           style={{
-            borderWidth: 1,
+            borderWidth: 2,
             borderColor: 'gray',
             borderRadius: 8,
-            padding: 16,
+            padding: 12,
             width: '80%',
             alignItems: 'center',
             justifyContent: 'center',
           }}
         >
-          <Center>
+          <HStack justifyContent="center" alignItems="center">
             <Icon
               as={Entypo}
               name="plus"
               color="gray.700"
               size={8} />
             <Heading fontSize="lg">Adicionar Apiário</Heading>
-          </Center>
+          </HStack>
         </TouchableOpacity>
       </Center>
 
@@ -42,7 +42,7 @@ export function Apiary() {
         <HStack justifyContent="space-between" mb={4}>
           <Heading fontSize="lg">Meus Apiários</Heading>
           <Text fontSize="lg" ml={2}>
-            ({apiarys.length})
+            Total: {apiarys.length}
           </Text>
         </HStack>
 
