@@ -1,5 +1,5 @@
 import { TouchableOpacity } from "react-native";
-import { Icon, VStack } from "native-base";
+import { HStack, Heading, Icon, VStack, Text } from "native-base";
 
 import { useNavigation } from "@react-navigation/native";
 import { AppNavigatorRoutesProps } from "../routes/app.routes";
@@ -26,9 +26,20 @@ export function ApiaryDetails() {
               as={Feather}
               name="arrow-left"
               size={8}
-              color="gray.300"
+              color="gray.700"
             />	
           </TouchableOpacity>
+
+          <HStack justifyContent="space-between" mt={4} mb={6} alignItems="center">
+
+            <Heading fontSize="xl" flexShrink={1}>
+              Colmeia(s)
+            </Heading>
+            <Text textTransform="capitalize" fontSize="md">
+              Apiário Principal
+            </Text>
+
+          </HStack>
         </VStack>
       </VStack>
     )
