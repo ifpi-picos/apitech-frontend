@@ -1,7 +1,9 @@
 import { TouchableOpacity } from "react-native";
+import { useNavigation } from "@react-navigation/native";
 import { Center, Text, VStack, Icon, Heading, HStack, FlatList } from "native-base";
 import { Entypo } from '@expo/vector-icons'; 
 
+import { AppNavigatorRoutesProps } from "../routes/app.routes"
 
 import { ScreenHeader } from "../components/ScreenHeader";
 import { ApiaryItem } from "../components/ApiaryItem";
@@ -9,6 +11,12 @@ import { useState } from "react";
 
 export function Apiary() {
   const [apiarys, setApiarys] = useState(["Principal", "maior", "Forte", "Rico"]);
+
+  const navigation = useNavigation<AppNavigatorRoutesProps>();
+
+  function handleOpenApiaryDetails() {
+    navigation.navigate('Apiario_Detalhes');
+  }
 
   return (
     <VStack flex={1}>
@@ -50,7 +58,9 @@ export function Apiary() {
           data={apiarys}
           keyExtractor={(item) => item}
           renderItem={({ item }) => (
-            <ApiaryItem />
+            <ApiaryItem
+              onPress={handleOpenApiaryDetails}
+            />
           )}
           showsVerticalScrollIndicator={false}
           _contentContainerStyle={{ pb: 10 }}

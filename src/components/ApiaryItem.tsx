@@ -9,7 +9,7 @@ type Props = TouchableOpacityProps & {
 
 export function ApiaryItem({ ...rest }: Props) {
   return (
-    <TouchableOpacity onPress={() => {}}>
+    <TouchableOpacity {...rest}>
       <HStack bg="gray.100" alignItems="center" p={2} pr={4} rounded="md" mb={3}>
         <VStack flex={1}>
           <Heading fontSize="xxl">Principal</Heading>

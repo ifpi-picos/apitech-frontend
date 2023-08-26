@@ -11,11 +11,13 @@ import { Profile } from "../screens/Profile";
 import { Apiary } from "../screens/Apiary";
 import { Home } from "../screens/Home";
 import { Platform } from "react-native";
+import { ApiaryDetails } from "../screens/ApiaryDetails";
 
 type AppRoutes = {
   Início: undefined;
   Perfil: undefined;
   Apiário: undefined;
+  Apiario_Detalhes: undefined;
 }
 //sao as propriedades das rotas de navegacao da aplicacao.
 export type AppNavigatorRoutesProps = BottomTabNavigationProp<AppRoutes>;
@@ -30,11 +32,11 @@ export function AppRoutes() {
 
   return(
     <Navigator
-      screenOptions={{ 
+      screenOptions={{
         headerShown: false,
         tabBarActiveTintColor: colors.black,
         tabBarInactiveTintColor: colors.gray[50],
-        
+
         tabBarStyle: {
           backgroundColor: "#A8D672",
           height: Platform.OS === "android" ? 80 : 85,
@@ -60,18 +62,25 @@ export function AppRoutes() {
         options={{
           tabBarIcon: (({ color }) => (
             <ApiarySvg width={iconSize} height={iconSize} fill={color} />
-            ))
-          }}
+          ))
+        }}
       />
-          <Screen
-            name="Perfil"
-            component={Profile}
-            options={{
-              tabBarIcon: (({ color }) => (
-                <ProfileSvg width={iconSize} height={iconSize} fill={color} />
-              ))
-            }}
-          />
+      <Screen
+        name="Perfil"
+        component={Profile}
+        options={{
+          tabBarIcon: (({ color }) => (
+            <ProfileSvg width={iconSize} height={iconSize} fill={color} />
+          ))
+        }}
+      />
+      <Screen 
+        name= "Apiario_Detalhes"
+        component={ApiaryDetails}
+        options={{
+          tabBarButton: () => null
+        }}
+      />
     </Navigator>
     )
 }
