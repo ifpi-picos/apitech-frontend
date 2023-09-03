@@ -1,6 +1,8 @@
-import { Center, Heading, VStack, ScrollView } from "native-base"
+import { Center, Heading, VStack, ScrollView, Text } from "native-base"
 import { Platform } from "react-native";
 import { useForm, Controller } from "react-hook-form";
+import { yupResolver } from "@hookform/resolvers/yup";
+import * as yup from 'yup';
 
 import { Input } from "../components/Input";
 import { Button } from "../components/Button";
@@ -13,12 +15,19 @@ type FormDataProps = {
   password_confirm: string;
 }
 
+const signUpSchema = yup.object({
+  name: yup.string().required('Informe o nome.').min(3, 'O nome deve ter no mínimo 3 caracteres.'),
+  email: yup.string().required('Informe o e-mail.').email('Informe um E-mail válido.'),
+  password: yup.string().required('Informe a senha.').min(6, 'A senha deve ter no mínimo 6 caracteres.'),
+  password_confirm: yup.string().required('Informe a confirmação da senha.').oneOf([yup.ref('password')], 'As senhas devem ser iguais.')
+})
 
 export function SignUp() {
 
   const navigation = useNavigation();
-
-  const { control, handleSubmit } = useForm<FormDataProps>();
+  const { control, handleSubmit, formState: { errors } } = useForm<FormDataProps>({
+    resolver: yupResolver(signUpSchema)
+  });
 
   function handleGoBack() {
     navigation.goBack();
@@ -50,11 +59,17 @@ export function SignUp() {
           <Controller
             control={control}
             name="name"
+            rules={{
+              required: 'Informe o nome',
+              minLength: 3,
+            }}
+
             render={({ field: { onChange, value } }) => (
               <Input
                 placeholder="Nome"
                 onChangeText={onChange}
                 value={value}
+                errorMessage={errors.name?.message}
               />
             )}
           />
@@ -62,6 +77,14 @@ export function SignUp() {
           <Controller
             control={control}
             name="email"
+            rules={{
+              required: 'Informe o e-mail',
+              pattern: {
+                value:/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+                message: 'Informe um E-mail válido'
+              }
+            }}
+
             render={({ field: { onChange, value } }) => (
               <Input
                 placeholder="E-mail"
@@ -69,6 +92,7 @@ export function SignUp() {
                 autoCapitalize="none"
                 onChangeText={onChange}
                 value={value}
+                errorMessage={errors.email?.message}
               />
             )}
           />
@@ -82,6 +106,7 @@ export function SignUp() {
                 secureTextEntry
                 onChangeText={onChange}
                 value={value}
+                errorMessage={errors.password?.message}
               />
             )}
           />
@@ -97,6 +122,7 @@ export function SignUp() {
                 value={value}
                 onSubmitEditing={handleSubmit(handleSignUp)}
                 returnKeyType="send"
+                errorMessage={errors.password_confirm?.message}
               />
             )}
           />
