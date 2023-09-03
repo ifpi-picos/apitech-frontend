@@ -32,7 +32,7 @@ export function ApiaryDetails() {
 
           <HStack justifyContent="space-between" mt={4} mb={6} alignItems="center">
 
-            <Heading fontSize="xl" flexShrink={1}>
+            <Heading fontFamily="heading" fontSize="xl" flexShrink={1}>
               Colmeia(s)
             </Heading>
             <Text textTransform="capitalize" fontSize="md">

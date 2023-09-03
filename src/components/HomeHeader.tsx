@@ -8,11 +8,11 @@ export function HomeHeader() {
       <HStack bg='GREEN' pt={12} pb={5} px={8} alignItems="center">
 
         <VStack flex={1}>
-          <Text color="gray.700" fontSize="lg">
+          <Text color="gray.700" fontFamily="heading" fontSize="lg">
             Olá, Bom dia
           </Text>
 
-          <Heading color="gray.700" fontSize="lg">
+          <Heading color="gray.700" fontFamily="heading" fontSize="lg">
             Fulano
           </Heading>
         </VStack>

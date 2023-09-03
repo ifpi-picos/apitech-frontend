@@ -41,14 +41,14 @@ export function Apiary() {
               name="plus"
               color="gray.700"
               size={8} />
-            <Heading fontSize="lg">Adicionar Apiário</Heading>
+            <Heading fontFamily="heading" fontSize="lg">Adicionar Apiário</Heading>
           </HStack>
         </TouchableOpacity>
       </Center>
 
       <VStack flex={1} px={8}>
         <HStack justifyContent="space-between" mb={4}>
-          <Heading fontSize="lg">Meus Apiários</Heading>
+          <Heading fontFamily="heading" fontSize="lg">Meus Apiários</Heading>
           <Text fontSize="lg" ml={2}>
             Total: {apiarys.length}
           </Text>

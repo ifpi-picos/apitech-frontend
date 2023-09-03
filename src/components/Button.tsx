@@ -21,7 +21,7 @@ export function Button({ title, variant = "solid", ...rest }: Props) {
     >
       <Text 
         color= "gray.700"
-        fontFamily="heading" 
+        fontFamily="heading"
         fontSize="lg"
       >
         {title}

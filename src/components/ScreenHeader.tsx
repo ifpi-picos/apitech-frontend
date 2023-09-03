@@ -7,7 +7,7 @@ type Props = {
 export function ScreenHeader({ title }: Props) {
   return (
       <Center bg="GREEN" pb={4} pt={16} rounded="xl">
-        <Heading fontSize="xxl">
+        <Heading fontFamily="heading" fontSize="xxl">
           {title}
         </Heading>
       </Center>

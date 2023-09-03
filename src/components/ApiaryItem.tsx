@@ -12,7 +12,7 @@ export function ApiaryItem({ ...rest }: Props) {
     <TouchableOpacity {...rest}>
       <HStack bg="gray.100" alignItems="center" p={2} pr={4} rounded="md" mb={3}>
         <VStack flex={1}>
-          <Heading fontSize="xxl">Principal</Heading>
+          <Heading fontFamily="heading" fontSize="xxl">Principal</Heading>
           <Text fontSize="lg">Lado leste</Text>
           <Text fontSize="lg">Numero de Colmeias: <Text fontSize="xl">002</Text></Text>
           <Text fontSize="lg">Obs.: <Text>...</Text></Text>

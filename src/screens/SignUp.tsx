@@ -128,13 +128,14 @@ export function SignUp() {
           />
 
           <Button
+            mb={4}
             title="Criar e acessar"
             onPress={handleSubmit(handleSignUp)}
           />
         </Center>
 
         <Button
-          mt={20}
+          mt='auto'
           title="Voltar para o login"
           variant="outline"
           onPress={handleGoBack}
