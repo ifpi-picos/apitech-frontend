@@ -34,19 +34,13 @@ export function SignUp() {
   }
 
   function handleSignUp({ name, email, password }: FormDataProps) {
-    fetch('http://apitech.kamiapp.com.br/usuario', {
+    fetch('https://apitech.kamiapp.com.br/usuario', {
       method: 'POST',
       headers: {
         'Accept': 'application/json',
         'Content-Type': 'application/json'
       },
-      body: JSON.stringify({ name, email, password })
-    }).then((response) => {
-      if (response.status === 200) {
-        return response.json();
-      } else {
-        throw new Error('Erro ao cadastrar usuário.');
-      }
+      body: JSON.stringify({ nome: name, email: email, senha: password })
     })
   }
 
