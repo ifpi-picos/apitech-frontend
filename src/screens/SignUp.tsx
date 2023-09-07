@@ -1,8 +1,11 @@
-import { Center, Heading, VStack, ScrollView, Text } from "native-base"
+import { Center, Heading, VStack, ScrollView, Text, useToast } from "native-base"
 import { Platform } from "react-native";
 import { useForm, Controller } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from 'yup';
+
+import { AppError } from "../utils/AppError";
+import { api } from "../services/api";
 
 import { Input } from "../components/Input";
 import { Button } from "../components/Button";
@@ -25,6 +28,8 @@ const signUpSchema = yup.object({
 
 export function SignUp() {
 
+  const toast = useToast();
+
   const navigation = useNavigation();
   const { control, handleSubmit, formState: { errors } } = useForm<FormDataProps>({
     resolver: yupResolver(signUpSchema)
@@ -35,36 +40,44 @@ export function SignUp() {
     navigation.goBack();
   }
 
-  function handleSignUp({ name, email, password }: FormDataProps) {
-    fetch('https://apitech.kamiapp.com.br/usuarios/', {
-      method: 'POST',
-      headers: {
-        "Content-type": "application/json"
-      },
-      body: JSON.stringify({ 
+  async function handleSignUp({ name, email, password }: FormDataProps) {
+
+
+
+    try{
+      const response = await api.post('/usuarios/', {
         nome: name,
         email,
         senha: password
-      })
-    }).then(async (response) => {
-      if (response.status === 201) {
-        const data = await response.json();
-        
-        // Lidar com o sucesso
-      } else if (response.status === 400) {
-        const errorData = await response.json();
-        console.error('Erro de validação:', errorData); // Exibe detalhes do erro no console
-        setServerError('Erro ao cadastrar usuário. Verifique os detalhes do erro no console.');
+      }) 
+    } catch (error: any) {
+      if (error instanceof AppError) {
+          // Lidar com AppError
+          const title = error.message;
+          toast.show({
+              title,
+              placement: 'top',
+              bgColor: 'red.500',
+          });
+      } else if (error.response && error.response.data && Array.isArray(error.response.data)) {
+          // Lidar com erros com resposta e um array de dados
+          const title = error.response.data[0].mensagem;
+          toast.show({
+              title,
+              placement: 'top',
+              bgColor: 'red.500',
+          });
       } else {
-        console.error('Erro ao cadastrar usuário. Status:', response.status);
-        setServerError('Erro ao cadastrar usuário. Status: ' + response.status);
+          // Lidar com outros tipos de erros
+          // Você pode fornecer uma mensagem de erro padrão ou lidar com esses erros de forma diferente, conforme necessário.
+          const title = 'Ocorreu um erro no servidor.';
+          toast.show({
+              title,
+              placement: 'top',
+              bgColor: 'red.500',
+          });
       }
-    })
-    .catch((error) => {
-      console.error('Erro ao cadastrar usuário:', error);
-      setServerError('Erro ao cadastrar usuário. Verifique o console para mais detalhes.');
-    });
-
+    }
   }
 
   return (
