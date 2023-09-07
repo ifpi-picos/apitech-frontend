@@ -7,6 +7,7 @@ import * as yup from 'yup';
 import { Input } from "../components/Input";
 import { Button } from "../components/Button";
 import { useNavigation } from "@react-navigation/native";
+import { useState } from "react";
 
 type FormDataProps = {
   name: string;
@@ -16,9 +17,9 @@ type FormDataProps = {
 }
 
 const signUpSchema = yup.object({
-  name: yup.string().required('Informe o nome.').min(3, 'O nome deve ter no mínimo 3 caracteres.'),
+  name: yup.string().required('Informe o nome.').min(3, 'O nome deve ter no mínimo 2 caracteres.'),
   email: yup.string().required('Informe o e-mail.').email('Informe um E-mail válido.'),
-  password: yup.string().required('Informe a senha.').min(6, 'A senha deve ter no mínimo 6 caracteres.'),
+  password: yup.string().required('Informe a senha.').min(8, 'A senha deve ter no mínimo 8 caracteres.'),
   password_confirm: yup.string().required('Informe a confirmação da senha.').oneOf([yup.ref('password')], 'As senhas devem ser iguais.')
 })
 
@@ -28,20 +29,42 @@ export function SignUp() {
   const { control, handleSubmit, formState: { errors } } = useForm<FormDataProps>({
     resolver: yupResolver(signUpSchema)
   });
+  const [serverError, setServerError] = useState<string | null>(null);
 
   function handleGoBack() {
     navigation.goBack();
   }
 
   function handleSignUp({ name, email, password }: FormDataProps) {
-    fetch('https://apitech.kamiapp.com.br/usuario', {
+    fetch('https://apitech.kamiapp.com.br/usuarios/', {
       method: 'POST',
       headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json'
+        "Content-type": "application/json"
       },
-      body: JSON.stringify({ nome: name, email: email, senha: password })
+      body: JSON.stringify({ 
+        nome: name,
+        email,
+        senha: password
+      })
+    }).then(async (response) => {
+      if (response.status === 201) {
+        const data = await response.json();
+        
+        // Lidar com o sucesso
+      } else if (response.status === 400) {
+        const errorData = await response.json();
+        console.error('Erro de validação:', errorData); // Exibe detalhes do erro no console
+        setServerError('Erro ao cadastrar usuário. Verifique os detalhes do erro no console.');
+      } else {
+        console.error('Erro ao cadastrar usuário. Status:', response.status);
+        setServerError('Erro ao cadastrar usuário. Status: ' + response.status);
+      }
     })
+    .catch((error) => {
+      console.error('Erro ao cadastrar usuário:', error);
+      setServerError('Erro ao cadastrar usuário. Verifique o console para mais detalhes.');
+    });
+
   }
 
   return (
