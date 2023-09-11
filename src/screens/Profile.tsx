@@ -2,8 +2,12 @@ import { Center, Heading, ScrollView, VStack } from "native-base";
 import { ScreenHeader } from "../components/ScreenHeader";
 import { Input } from "../components/Input";
 import { Button } from "../components/Button";
+import { useAuth } from "../hooks/useAuth";
 
 export function Profile() {
+  const { user } = useAuth();
+
+  
   return (
     <VStack flex={1}>
       <ScreenHeader title="Perfil" />
@@ -17,6 +21,10 @@ export function Profile() {
             rounded="lg"
             label="Nome"
             placeholder="Nome"
+            value={user.nome}
+            isDisabled
+            isReadOnly
+            
             />
             <Input 
             borderWidth={2}
@@ -24,7 +32,10 @@ export function Profile() {
             rounded="lg"
             label="E-mail"
             placeholder="E-mail"
+            value={user.email}
             isDisabled
+            isReadOnly
+
             />
         </Center>
         <VStack px={10} mt={12} mb={9}>

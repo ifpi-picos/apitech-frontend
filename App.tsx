@@ -5,7 +5,7 @@ import { THEME } from './src/theme';
 import { useFonts, Roboto_400Regular, Roboto_500Medium, Roboto_700Bold, Roboto_900Black } from '@expo-google-fonts/roboto';
 import { Loading } from './src/components/Loading';
 
-import { AuthContextPorivder } from './src/contexts/AuthContext';
+import { AuthContextProvider } from './src/contexts/AuthContext';
 
 import { Routes } from './src/routes';
 
@@ -23,9 +23,9 @@ export default function App() {
       <StatusBar
         translucent
       />
-      <AuthContextPorivder>
+      <AuthContextProvider>
         {fontsLoaded ? <Routes /> : <Loading />}
-      </AuthContextPorivder>
+      </AuthContextProvider>
     </NativeBaseProvider>
   );
 }

@@ -5,6 +5,8 @@ import { Platform } from "react-native";
 
 import { AuthNavigatorRoutesProps } from "../routes/auth.routes";
 
+import { useAuth } from "../hooks/useAuth";
+
 import { Input } from "../components/Input";
 import { Button } from "../components/Button";
 
@@ -14,6 +16,7 @@ type FormData = {
 }
 
 export function SignIn() {
+  const { singIn, isLoading } = useAuth();
 
   const navigation = useNavigation<AuthNavigatorRoutesProps>();
 
@@ -24,7 +27,7 @@ export function SignIn() {
   }
 
   function handleSignIn({ email, password }: FormData) {
-    console.log(email, password);
+    singIn(email, password);
   }
 
   return (
@@ -32,7 +35,7 @@ export function SignIn() {
       contentContainerStyle={{ flexGrow: 1 }}
       showsVerticalScrollIndicator={false}
     >
-      <VStack flex={1} px={10} pb={Platform.OS === "ios" ? 40 : 16}>
+      <VStack flex={1}  px={10} pb={Platform.OS === "ios" ? 40 : 16}>
         <Center mt={10}>
           <Heading color="gray.700" mr={8} lineHeight={"xs"} fontSize="5xl" fontFamily="heading">
             Api
@@ -70,6 +73,8 @@ export function SignIn() {
                 onChangeText={onChange}
                 errorMessage={errors.password?.message}
                 secureTextEntry
+                returnKeyType="send"
+                onSubmitEditing={handleSubmit(handleSignIn)}
               />
 
             )}
@@ -81,25 +86,29 @@ export function SignIn() {
           <Button
             onPress={handleSubmit(handleSignIn)}
             title="Acessar"
+            isLoading={isLoading}
           />
         </Center>
 
-        <Center mt={40}>
-          <Text
-            color="gray.700"
-            fontSize="sm"
-            mb={3}
-            fontFamily="body"
-          >
-            Ainda não tem acesso?
-          </Text>
-        </Center>
+        <VStack flex={1} justifyContent="flex-end"> 
 
-        <Button
-          title="Registrar-se"
-          variant="outline"
-          onPress={handleNewAccount}
-        />
+          <Center>
+            <Text
+              color="gray.700"
+              fontSize="sm"
+              mb={3}
+              fontFamily="body"
+              >
+              Ainda não tem acesso?
+            </Text>
+          </Center>
+
+          <Button
+            title="Registrar-se"
+            variant="outline"
+            onPress={handleNewAccount}
+            />
+          </VStack>
       </VStack>
     </ScrollView>
   );

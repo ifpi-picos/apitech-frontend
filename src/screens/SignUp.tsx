@@ -11,6 +11,7 @@ import { Input } from "../components/Input";
 import { Button } from "../components/Button";
 import { useNavigation } from "@react-navigation/native";
 import { useState } from "react";
+import { useAuth } from "../hooks/useAuth";
 
 type FormDataProps = {
   name: string;
@@ -27,8 +28,9 @@ const signUpSchema = yup.object({
 })
 
 export function SignUp() {
-
+  const [isLoadingSignUp, setIsLoadingSignUp] = useState(false);
   const toast = useToast();
+  const { singIn } = useAuth();
 
   const navigation = useNavigation();
   const { control, handleSubmit, formState: { errors } } = useForm<FormDataProps>({
@@ -45,14 +47,20 @@ export function SignUp() {
 
 
     try{
-      const response = await api.post('/usuarios/', {
+      setIsLoadingSignUp(true);
+      await api.post('/usuarios/', {
         nome: name,
         email,
         senha: password
-      }) 
+      })
+      await singIn(email, password); 
+
+
+
     } catch (error: any) {
       if (error instanceof AppError) {
           // Lidar com AppError
+          setIsLoadingSignUp(false);
           const title = error.message;
           toast.show({
               title,
@@ -62,6 +70,8 @@ export function SignUp() {
       } else if (error.response && error.response.data && Array.isArray(error.response.data)) {
           // Lidar com erros com resposta e um array de dados
           const title = error.response.data[0].mensagem;
+          setIsLoadingSignUp(false);
+
           toast.show({
               title,
               placement: 'top',
@@ -71,6 +81,8 @@ export function SignUp() {
           // Lidar com outros tipos de erros
           // Você pode fornecer uma mensagem de erro padrão ou lidar com esses erros de forma diferente, conforme necessário.
           const title = 'Ocorreu um erro no servidor.';
+          setIsLoadingSignUp(false);
+
           toast.show({
               title,
               placement: 'top',
@@ -174,6 +186,7 @@ export function SignUp() {
             mb={4}
             title="Criar e acessar"
             onPress={handleSubmit(handleSignUp)}
+            isLoading={isLoadingSignUp}
           />
         </Center>
 
