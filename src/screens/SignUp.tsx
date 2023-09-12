@@ -1,9 +1,10 @@
-import { Center, Heading, VStack, ScrollView, Text, useToast } from "native-base"
+import { Center, Heading, VStack, ScrollView, Pressable, useToast, Icon } from "native-base"
 import { Platform } from "react-native";
 import { useForm, Controller } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from 'yup';
 
+import { MaterialIcons } from '@expo/vector-icons';
 import { AppError } from "../utils/AppError";
 import { api } from "../services/api";
 
@@ -29,6 +30,8 @@ const signUpSchema = yup.object({
 
 export function SignUp() {
   const [isLoadingSignUp, setIsLoadingSignUp] = useState(false);
+  const [show, setShow] = useState(false);
+
   const toast = useToast();
   const { singIn } = useAuth();
 
@@ -123,6 +126,7 @@ export function SignUp() {
               <Input
                 placeholder="Nome"
                 onChangeText={onChange}
+                bg="gray.100"
                 value={value}
                 errorMessage={errors.name?.message}
               />
@@ -145,6 +149,7 @@ export function SignUp() {
                 placeholder="E-mail"
                 keyboardType="email-address"
                 autoCapitalize="none"
+                bg="gray.100"
                 onChangeText={onChange}
                 value={value}
                 errorMessage={errors.email?.message}
@@ -158,10 +163,18 @@ export function SignUp() {
             render={({ field: { onChange, value } }) => (
               <Input
                 placeholder="Senha"
-                secureTextEntry
+                bg="gray.100"
                 onChangeText={onChange}
                 value={value}
                 errorMessage={errors.password?.message}
+                type={show ? "text" : "password"}
+                InputRightElement={
+                  <Pressable onPress={() => setShow(!show)}>
+                    <Icon as={<MaterialIcons 
+                      name={show ? "visibility" : "visibility-off"} />} 
+                      size={5} mr="2" color="gray.500" />
+                  </Pressable>
+                } 
               />
             )}
           />
@@ -172,12 +185,20 @@ export function SignUp() {
             render={({ field: { onChange, value } }) => (
               <Input
                 placeholder="Confirme a Senha"
-                secureTextEntry
+                bg="gray.100"
                 onChangeText={onChange}
                 value={value}
                 onSubmitEditing={handleSubmit(handleSignUp)}
                 returnKeyType="send"
                 errorMessage={errors.password_confirm?.message}
+                type={show ? "text" : "password"}
+                InputRightElement={
+                  <Pressable onPress={() => setShow(!show)}>
+                    <Icon as={<MaterialIcons 
+                      name={show ? "visibility" : "visibility-off"} />} 
+                      size={5} mr="2" color="gray.500" />
+                  </Pressable>
+                } 
               />
             )}
           />

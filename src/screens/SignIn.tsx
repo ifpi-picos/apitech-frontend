@@ -1,14 +1,16 @@
 import { Controller, useForm } from "react-hook-form";
 import { useNavigation } from "@react-navigation/native";
-import { Center, Heading, Text, VStack, ScrollView } from "native-base"
+import { Center, Heading, Text, VStack, ScrollView, Pressable, Icon } from "native-base"
 import { Platform } from "react-native";
 
 import { AuthNavigatorRoutesProps } from "../routes/auth.routes";
+import { MaterialIcons } from '@expo/vector-icons';
 
 import { useAuth } from "../hooks/useAuth";
 
 import { Input } from "../components/Input";
 import { Button } from "../components/Button";
+import { useState } from "react";
 
 type FormData = {
   email: string;
@@ -17,6 +19,7 @@ type FormData = {
 
 export function SignIn() {
   const { singIn, isLoading } = useAuth();
+  const [show, setShow] = useState(false);
 
   const navigation = useNavigation<AuthNavigatorRoutesProps>();
 
@@ -56,6 +59,8 @@ export function SignIn() {
             render={({ field: { onChange } }) => (
               <Input
                 placeholder="E-mail"
+                bg="gray.100"
+
                 keyboardType="email-address"
                 onChangeText={onChange}
                 errorMessage={errors.email?.message}
@@ -72,16 +77,24 @@ export function SignIn() {
                 placeholder="Senha"
                 onChangeText={onChange}
                 errorMessage={errors.password?.message}
-                secureTextEntry
                 returnKeyType="send"
+                bg="gray.100"
+
                 onSubmitEditing={handleSubmit(handleSignIn)}
+                type={show ? "text" : "password"}
+                InputRightElement={
+                  <Pressable onPress={() => setShow(!show)}>
+                    
+                    <Icon as={<MaterialIcons 
+                      name={show ? "visibility" : "visibility-off"} />} 
+                      size={5} mr="2" color="gray.500" />
+                  </Pressable>
+                } 
+
               />
 
             )}
           />
-
-
-
 
           <Button
             onPress={handleSubmit(handleSignIn)}

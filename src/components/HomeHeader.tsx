@@ -1,11 +1,28 @@
-import { HStack, Heading, Text, VStack, Icon } from "native-base";
+import { HStack, Heading, Text, VStack, Icon, AlertDialog, Button } from "native-base";
 import { TouchableOpacity } from "react-native";
 import { MaterialIcons } from '@expo/vector-icons';
 import { useAuth } from "../hooks/useAuth";
+import { useRef, useState } from "react";
 
 
 export function HomeHeader() {
   const { user, singOut } = useAuth();
+
+  const [isOpen, setIsOpen] = useState(false);
+  const onClose = () => {
+    setIsOpen(false)
+    singOut();
+  };
+  const onCloseCancel = () => {
+    setIsOpen(false)
+  };
+
+  const cancelRef = useRef(null);
+
+  function handleSingOut() {
+    setIsOpen(!isOpen)
+    // singOut();
+  }
 
   return (
       <HStack bg='GREEN' pt={12} pb={5} px={8} alignItems="center">
@@ -20,7 +37,7 @@ export function HomeHeader() {
           </Heading>
         </VStack>
 
-        <TouchableOpacity onPress={singOut}>
+        <TouchableOpacity onPress={handleSingOut}>
           <Icon
             as={MaterialIcons}
             name="logout"
@@ -31,6 +48,27 @@ export function HomeHeader() {
             Sair
           </Text>
         </TouchableOpacity>
+        <AlertDialog leastDestructiveRef={cancelRef} isOpen={isOpen} onClose={onCloseCancel}>
+        <AlertDialog.Content>
+          <AlertDialog.CloseButton />
+          <AlertDialog.Header>Sair</AlertDialog.Header>
+          <AlertDialog.Body flex={1} alignItems="center">
+            <Text fontFamily="heading" fontSize="xl">
+              Desejar realmente sair?
+            </Text>
+          </AlertDialog.Body>
+          <AlertDialog.Footer>
+            <Button.Group space={2}>
+              <Button variant="unstyled" colorScheme="coolGray" onPress={onCloseCancel} ref={cancelRef}>
+                Cancelar
+              </Button>
+              <Button colorScheme="danger" onPress={onClose}>
+                Sair
+              </Button>
+            </Button.Group>
+          </AlertDialog.Footer>
+        </AlertDialog.Content>
+      </AlertDialog>
         
       </HStack>
     )
