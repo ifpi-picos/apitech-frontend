@@ -13,6 +13,14 @@ export type AuthContextDataProps = {
   singOut: () => Promise<void>;
   isLoading: boolean;
   isLoadingUserStorageData: boolean;
+  apiarys: ApiaryProps[];
+  hive: string[];
+  fetchApiarys: () => Promise<void>;
+}
+
+type ApiaryProps = {
+  id: number;
+  nome: string;
 }
 
 type AuthContextProviderProps = {
@@ -24,6 +32,11 @@ export const AuthContext = createContext<AuthContextDataProps>({} as AuthContext
 export function AuthContextProvider({ children }: AuthContextProviderProps) {
   const toast = useToast();
   const [isLoading, setIsLoading] = useState(false);
+
+  const [apiarys, setApiarys] = useState<ApiaryProps[]>([]);
+  const [hive, setHive] = useState<string[]>([])
+
+
 
   const [user, setUser] = useState<UserDTO>({} as UserDTO);
   const [isLoadingUserStorageData, setIsLoadingUserStorageData] = useState(true);
@@ -59,7 +72,6 @@ export function AuthContextProvider({ children }: AuthContextProviderProps) {
 
       if (response.status === 200 && response.data.token) {
         const token = response.data.token;
-        console.log('Token de autenticação:', token);
         const userDataResponse = await api.get('/usuarios', {
           headers: {
             Authorization: `Bearer ${token}`
@@ -128,8 +140,61 @@ export function AuthContextProvider({ children }: AuthContextProviderProps) {
     loadUserData();
   }, []);
 
+  async function fetchApiarys() {
+    try {
+      setIsLoading(true);
+
+      const response = await api.get('/apiarios');
+      setApiarys(response.data);
+      if (response.data) {
+        setIsLoading(false);
+      }
+      console.log(response.data);
+    } catch (error: any) {
+      if (error.response && error.response.data && error.response.data.mensagem) {
+
+        toast.show({
+          title: error.response.data.mensagem,
+          placement: 'top',
+          bgColor: 'yellow.700',
+        });
+      } else {
+
+        toast.show({
+          title: 'Ocorreu um erro no servidor.',
+          placement: 'top',
+          bgColor: 'red.500',
+        });
+      }
+    }
+  }
+
+  async function fetchHiveByApiarys() {
+    try{
+      // const response = await api.get(`/apiarios/${apiarys[0].id}/colmeias`);
+      // setHive(response.data);	
+      
+    } catch (error: any) {
+      if (error.response && error.response.data && error.response.data.mensagem) {
+
+        toast.show({
+          title: error.response.data.mensagem,
+          placement: 'top',
+          bgColor: 'red.500',
+        });
+      } else {
+
+        toast.show({
+          title: 'Ocorreu um erro no servidor.',
+          placement: 'top',
+          bgColor: 'red.500',
+        });
+      }
+    }
+  }
+
   return (
-    <AuthContext.Provider value={{ user, singIn, isLoading, isLoadingUserStorageData, singOut }}>
+    <AuthContext.Provider value={{ user, singIn, isLoading, isLoadingUserStorageData, singOut, apiarys, hive, fetchApiarys }}>
       {children}
     </AuthContext.Provider>
   )

@@ -2,7 +2,7 @@ import { Button as ButtonNativeBase, IButtonProps, Text } from 'native-base';
 
 type Props = IButtonProps & {
   title: string;
-  variant?: "outline" | "solid"; 
+  variant?: "Subtle" | "solid"; 
 }
 
 export function Button({ title, variant = "solid", ...rest }: Props) {
@@ -10,11 +10,11 @@ export function Button({ title, variant = "solid", ...rest }: Props) {
     <ButtonNativeBase 
       w="full"
       h={14}
-      bg={variant === "outline" ? "transparent" : "GREEN"}
-      borderWidth={variant === "outline" ? 1 : 0}
+      bg={variant === "Subtle" ? "Subtle" : "GREEN"}
+      borderWidth={variant === "Subtle" ? 1 : 0}
       borderColor="GREEN"
       _pressed={{
-        bg: variant === "outline" ? "gray.100" : "YELLOW",
+        bg: variant === "Subtle" ? "gray.100" : "YELLOW",
       }}
       rounded={15}
       {...rest}

@@ -12,17 +12,19 @@ import {
 import { Center } from "native-base";
 import { Entypo } from "@expo/vector-icons";
 
-import { Flex } from "native-base";
 import { useNavigation } from "@react-navigation/native";
 import { AppNavigatorRoutesProps } from "../routes/app.routes";
 import { Feather } from "@expo/vector-icons";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { ApiaryItem } from "../components/ApiaryItem";
 import { HiveItem } from "../components/HiveItem";
+import { useAuth } from "../hooks/useAuth";
 
 export function ApiaryDetails() {
   const navigation = useNavigation<AppNavigatorRoutesProps>();
-  const [hive, setHive] = useState(['teste'])
+
+  const { apiarys, hive } = useAuth();
+
 
   function handleGoBack() {
     navigation.navigate("Apiário");
@@ -30,6 +32,7 @@ export function ApiaryDetails() {
   function handleOpenApiaryDetails() {
     navigation.navigate('Hive');
   }
+
 
   return (
     <VStack flex={1}>
@@ -55,7 +58,10 @@ export function ApiaryDetails() {
             mb={4}
           >
             <Text textTransform="capitalize" fontSize="md">
-              Apiário Principal
+              Apiário:{' '} 
+              <Text fontFamily="heading" fontSize="lg">
+                {apiarys[0].nome}
+              </Text> 
             </Text>
             <Text fontSize="lg" ml={2}>
               Total Colmeias: {hive.length}

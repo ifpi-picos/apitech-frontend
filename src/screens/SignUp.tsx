@@ -124,9 +124,11 @@ export function SignUp() {
 
             render={({ field: { onChange, value } }) => (
               <Input
+                color="gray.100"
+
                 placeholder="Nome"
                 onChangeText={onChange}
-                bg="gray.100"
+                bg="gray.500"
                 value={value}
                 errorMessage={errors.name?.message}
               />
@@ -149,7 +151,9 @@ export function SignUp() {
                 placeholder="E-mail"
                 keyboardType="email-address"
                 autoCapitalize="none"
-                bg="gray.100"
+                bg="gray.500"
+                color="gray.100"
+
                 onChangeText={onChange}
                 value={value}
                 errorMessage={errors.email?.message}
@@ -163,7 +167,8 @@ export function SignUp() {
             render={({ field: { onChange, value } }) => (
               <Input
                 placeholder="Senha"
-                bg="gray.100"
+                bg="gray.500"
+                color="gray.100" 
                 onChangeText={onChange}
                 value={value}
                 errorMessage={errors.password?.message}
@@ -172,7 +177,7 @@ export function SignUp() {
                   <Pressable onPress={() => setShow(!show)}>
                     <Icon as={<MaterialIcons 
                       name={show ? "visibility" : "visibility-off"} />} 
-                      size={5} mr="2" color="gray.500" />
+                      size={5} mr="2" color="gray.100" />
                   </Pressable>
                 } 
               />
@@ -185,7 +190,8 @@ export function SignUp() {
             render={({ field: { onChange, value } }) => (
               <Input
                 placeholder="Confirme a Senha"
-                bg="gray.100"
+                bg="gray.500"
+                color="gray.100" 
                 onChangeText={onChange}
                 value={value}
                 onSubmitEditing={handleSubmit(handleSignUp)}
@@ -196,7 +202,7 @@ export function SignUp() {
                   <Pressable onPress={() => setShow(!show)}>
                     <Icon as={<MaterialIcons 
                       name={show ? "visibility" : "visibility-off"} />} 
-                      size={5} mr="2" color="gray.500" />
+                      size={5} mr="2" color="gray.100" />
                   </Pressable>
                 } 
               />
@@ -214,7 +220,7 @@ export function SignUp() {
         <Button
           mt='auto'
           title="Voltar para o login"
-          variant="outline"
+          variant="Subtle"
           onPress={handleGoBack}
         />
       </VStack>

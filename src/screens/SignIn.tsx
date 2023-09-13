@@ -59,7 +59,8 @@ export function SignIn() {
             render={({ field: { onChange } }) => (
               <Input
                 placeholder="E-mail"
-                bg="gray.100"
+                bg="gray.500"
+                color="gray.100"
 
                 keyboardType="email-address"
                 onChangeText={onChange}
@@ -78,16 +79,16 @@ export function SignIn() {
                 onChangeText={onChange}
                 errorMessage={errors.password?.message}
                 returnKeyType="send"
-                bg="gray.100"
-
+                bg="gray.500"
+                color="gray.100"
                 onSubmitEditing={handleSubmit(handleSignIn)}
                 type={show ? "text" : "password"}
                 InputRightElement={
-                  <Pressable onPress={() => setShow(!show)}>
+                  <Pressable  onPress={() => setShow(!show)}>
                     
                     <Icon as={<MaterialIcons 
                       name={show ? "visibility" : "visibility-off"} />} 
-                      size={5} mr="2" color="gray.500" />
+                      size={5} mr="2" color="gray.100"  />
                   </Pressable>
                 } 
 
@@ -118,7 +119,7 @@ export function SignIn() {
 
           <Button
             title="Registrar-se"
-            variant="outline"
+            variant="Subtle"
             onPress={handleNewAccount}
             />
           </VStack>

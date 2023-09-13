@@ -11,17 +11,17 @@ export function Input({ errorMessage = null, isInvalid, ...rest }: Props) {
   return (
     <FormControl isInvalid={invalid} mb={4}>
       <NativeBaseInput 
-        bg="white"
+        bg="gray.100"
         h={14}
         w="100%"
         px={4}
-        borderWidth={0}
+        // borderWidth={0}
         fontSize="lg"
-        color="gray.700"
-        borderBottomWidth={2}
-        borderBottomColor="gray.500"
+        color="gray.100"
+        borderWidth={2}
+        borderColor="gray.100"
         fontFamily="body"
-        placeholderTextColor="gray.500"
+        placeholderTextColor="gray.100"
         _invalid={{
           fontSize: "lg",  
           borderBottomWidth: 2,
@@ -29,9 +29,10 @@ export function Input({ errorMessage = null, isInvalid, ...rest }: Props) {
         }}
         _focus={{
           fontSize: "lg",  
-          borderBottomWidth: 2,
+          borderWidth: 2,
           borderColor: "GREEN",
-          color: "gray.700"
+          color: "gray.100",
+          
         }}
         {...rest}
         />
