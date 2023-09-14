@@ -1,6 +1,6 @@
-import { TouchableOpacity } from "react-native";
+import { ActivityIndicator, TouchableOpacity } from "react-native";
 import { useNavigation } from "@react-navigation/native";
-import { Center, Text, VStack, Icon, Heading, HStack, FlatList, useToast } from "native-base";
+import { Center, Text, VStack, Icon, Heading, HStack, FlatList, useToast, Spinner } from "native-base";
 import { Entypo } from '@expo/vector-icons'; 
 
 import { AppNavigatorRoutesProps } from "../routes/app.routes"
@@ -8,10 +8,10 @@ import { AppNavigatorRoutesProps } from "../routes/app.routes"
 import { ScreenHeader } from "../components/ScreenHeader";
 import { ApiaryItem } from "../components/ApiaryItem";
 import { useEffect, useState } from "react";
-import { api } from "../services/api";
-import { useAuth } from "../hooks/useAuth";
-import { Loading } from "../components/Loading";
 
+import { useAuth } from "../hooks/useAuth";
+
+import { useIsFocused } from '@react-navigation/native';
 
 
 export function Apiary() {
@@ -19,7 +19,8 @@ export function Apiary() {
 
   const { apiarys, fetchApiarys } = useAuth();
 
-
+  const [loading, setLoading] = useState(true);
+  const isFocused = useIsFocused();
   const navigation = useNavigation<AppNavigatorRoutesProps>();
 
   function handleOpenApiaryDetails() {
@@ -27,8 +28,14 @@ export function Apiary() {
   }
 
   useEffect(() => {
-    fetchApiarys();
-  }, []);
+    if (isFocused) {
+      setTimeout(() => {
+        setLoading(false);
+      }, 1000);
+      fetchApiarys();
+    }
+    setLoading(true);
+  }, [isFocused]);
 
   return (
     <VStack flex={1}>
@@ -66,6 +73,14 @@ export function Apiary() {
           </Text>
         </HStack>
 
+        {loading ? <HStack space={8} flex={1} justifyContent="center" alignItems="center">
+          <Spinner color="emerald.500" size="lg" />
+        </HStack> : apiarys.length === 0 ? 
+        (
+        <VStack flex={1} alignContent="center" justifyContent="center">
+          <Text fontSize="lg" textAlign="center" >Nenhum Apiário cadastrado</Text>
+        </VStack>
+        ) : 
         <FlatList 
           data={apiarys}
           keyExtractor={(item) => item.id.toString()}
@@ -79,11 +94,7 @@ export function Apiary() {
           showsVerticalScrollIndicator={false}
           _contentContainerStyle={{ pb: 10 }}
           contentContainerStyle={ apiarys.length === 0 && { flex: 1, justifyContent: "center" } }
-          ListEmptyComponent={() => (
-            <Text fontSize="lg" textAlign="center">Nenhum apiário cadastrado</Text>
-          )
-          }
-        />
+        />}
 
       </VStack>
       

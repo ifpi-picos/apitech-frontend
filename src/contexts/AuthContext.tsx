@@ -109,6 +109,8 @@ export function AuthContextProvider({ children }: AuthContextProviderProps) {
       setUser({} as UserDTO);
       await storageUserRemove();
       await storageAuthTokenRemove();
+      setIsLoading(false);
+
 
     } catch (error) {
       throw error;
@@ -169,29 +171,29 @@ export function AuthContextProvider({ children }: AuthContextProviderProps) {
     }
   }
 
-  async function fetchHiveByApiarys() {
-    try{
-      // const response = await api.get(`/apiarios/${apiarys[0].id}/colmeias`);
-      // setHive(response.data);	
+  // async function fetchHiveByApiarys() {
+  //   try{
+  //     const response = await api.get(`/apiarios/${apiarys[0].id}/colmeias`);
+  //     setHive(response.data);	
       
-    } catch (error: any) {
-      if (error.response && error.response.data && error.response.data.mensagem) {
+  //   } catch (error: any) {
+  //     if (error.response && error.response.data && error.response.data.mensagem) {
 
-        toast.show({
-          title: error.response.data.mensagem,
-          placement: 'top',
-          bgColor: 'red.500',
-        });
-      } else {
+  //       toast.show({
+  //         title: error.response.data.mensagem,
+  //         placement: 'top',
+  //         bgColor: 'red.500',
+  //       });
+  //     } else {
 
-        toast.show({
-          title: 'Ocorreu um erro no servidor.',
-          placement: 'top',
-          bgColor: 'red.500',
-        });
-      }
-    }
-  }
+  //       toast.show({
+  //         title: 'Ocorreu um erro no servidor.',
+  //         placement: 'top',
+  //         bgColor: 'red.500',
+  //       });
+  //     }
+  //   }
+  // }
 
   return (
     <AuthContext.Provider value={{ user, singIn, isLoading, isLoadingUserStorageData, singOut, apiarys, hive, fetchApiarys }}>
