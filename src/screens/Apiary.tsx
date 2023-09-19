@@ -1,4 +1,4 @@
-import { ActivityIndicator, TouchableOpacity } from "react-native";
+import { ActivityIndicator, TouchableOpacity, useWindowDimensions } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { Center, Text, VStack, Icon, Heading, HStack, FlatList, useToast, Spinner } from "native-base";
 import { Entypo } from '@expo/vector-icons'; 
@@ -22,6 +22,8 @@ export function Apiary() {
   const [loading, setLoading] = useState(true);
   const isFocused = useIsFocused();
   const navigation = useNavigation<AppNavigatorRoutesProps>();
+  const windowDimensions = useWindowDimensions();
+  const isVertical = windowDimensions.height > windowDimensions.width; // Verifica se a orientação é vertical
 
   function handleOpenApiaryDetails() {
     navigation.navigate('Apiario_Detalhes');
@@ -39,17 +41,17 @@ export function Apiary() {
 
   return (
     <VStack flex={1}>
-      <ScreenHeader title="Apiário" />
-
-      <Center my={5}>
+      <ScreenHeader title="Apiário">
+      <Center>
         <TouchableOpacity
           onPress={() => { }}
           style={{
             borderWidth: 2,
             borderColor: 'gray',
             borderRadius: 8,
-            padding: 12,
-            width: '80%',
+            paddingHorizontal: 8,
+            paddingVertical: 4,
+            width: 'auto',
             alignItems: 'center',
             justifyContent: 'center',
           }}
@@ -60,18 +62,22 @@ export function Apiary() {
               name="plus"
               color="gray.700"
               size={8} />
-            <Heading fontFamily="heading" fontSize="lg">Adicionar Apiário</Heading>
+            <Heading fontFamily="heading" fontSize="lg" textAlign="center">Adicionar Apiário</Heading>
           </HStack>
         </TouchableOpacity>
       </Center>
 
-      <VStack flex={1} px={8}>
+      </ScreenHeader>
+
+      <VStack flex={1} pt={4} px={isVertical ? 8 : 32}>
         <HStack justifyContent="space-between" mb={4}>
           <Heading fontFamily="heading" fontSize="lg">Meus Apiários</Heading>
           <Text fontSize="lg" ml={2}>
             Total: {apiarys.length}
           </Text>
         </HStack>
+
+
 
         {loading ? <HStack space={8} flex={1} justifyContent="center" alignItems="center">
           <Spinner color="emerald.500" size="lg" />

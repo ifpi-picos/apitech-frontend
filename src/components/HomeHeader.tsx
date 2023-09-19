@@ -1,5 +1,5 @@
 import { HStack, Heading, Text, VStack, Icon, AlertDialog, Button } from "native-base";
-import { TouchableOpacity } from "react-native";
+import { TouchableOpacity, useWindowDimensions } from "react-native";
 import { MaterialIcons } from '@expo/vector-icons';
 import { useAuth } from "../hooks/useAuth";
 import { useRef, useState } from "react";
@@ -8,6 +8,9 @@ import { useRef, useState } from "react";
 export function HomeHeader() {
   const { user, singOut } = useAuth();
 
+  const windowDimensions = useWindowDimensions();
+  const isVertical = windowDimensions.height > windowDimensions.width; // Verifica se a orientação é vertical
+  
   const [isOpen, setIsOpen] = useState(false);
   const onClose = () => {
     setIsOpen(false)
@@ -21,11 +24,10 @@ export function HomeHeader() {
 
   function handleSingOut() {
     setIsOpen(!isOpen)
-    // singOut();
   }
 
   return (
-      <HStack bg='GREEN' pt={12} pb={5} px={8} alignItems="center">
+      <HStack bg='GREEN' pt={isVertical ? 16 : 4} rounded="xl" pb={5} px={isVertical ? 8 : 32} alignItems="center">
 
         <VStack flex={1}>
           <Text color="gray.700" fontFamily="body" fontSize="lg">
@@ -58,12 +60,16 @@ export function HomeHeader() {
             </Text>
           </AlertDialog.Body>
           <AlertDialog.Footer>
-            <Button.Group space={2}>
-              <Button variant="unstyled" colorScheme="coolGray" onPress={onCloseCancel} ref={cancelRef}>
-                Cancelar
+            <Button.Group space={2} flex={1} alignItems="center" justifyContent="space-around">
+              <Button variant="unstyled" py={4} flex={1} colorScheme="coolGray" onPress={onCloseCancel} ref={cancelRef}>
+                <Text fontSize="xl">
+                  Cancelar
+                </Text>
               </Button>
-              <Button colorScheme="danger" onPress={onClose}>
-                Sair
+              <Button colorScheme="danger" py={4} flex={1} onPress={onClose}>
+                <Text color="white" fontSize="xl">
+                  Sair
+                </Text>
               </Button>
             </Button.Group>
           </AlertDialog.Footer>

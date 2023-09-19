@@ -1,4 +1,4 @@
-import { Center, Heading, VStack, ScrollView, Pressable, useToast, Icon } from "native-base"
+import { Center, Heading, VStack, ScrollView, Pressable, useToast, Icon, Box } from "native-base"
 import { Platform } from "react-native";
 import { useForm, Controller } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -101,7 +101,7 @@ export function SignUp() {
       showsVerticalScrollIndicator={false}
     >
       <VStack flex={1} px={10} pb={Platform.OS === "ios" ? 40 : 16}>
-        <Center mt={10}>
+        <Center  mt={32} mb={12}>
           <Heading color="gray.700" mr={8} lineHeight={"xs"} fontSize="5xl" fontFamily="heading">
             Api
           </Heading>
@@ -210,19 +210,23 @@ export function SignUp() {
           />
 
           <Button
-            mb={4}
+            mb={12}
             title="Criar e acessar"
             onPress={handleSubmit(handleSignUp)}
             isLoading={isLoadingSignUp}
           />
         </Center>
-
+      <Box
+        justifyContent="flex-end"
+        flex={1}
+      >
         <Button
-          mt='auto'
+          
           title="Voltar para o login"
           variant="Subtle"
           onPress={handleGoBack}
-        />
+          />
+          </Box>
       </VStack>
 
     </ScrollView>

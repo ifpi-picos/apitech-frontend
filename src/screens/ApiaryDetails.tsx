@@ -1,4 +1,4 @@
-import { TouchableOpacity } from "react-native";
+import { TouchableOpacity, useWindowDimensions } from "react-native";
 import {
   HStack,
   Heading,
@@ -32,23 +32,44 @@ export function ApiaryDetails() {
   function handleOpenApiaryDetails() {
     navigation.navigate('Hive');
   }
+  const windowDimensions = useWindowDimensions();
+  const isVertical = windowDimensions.height > windowDimensions.width; // Verifica se a orientação é vertical
 
 
   return (
     <VStack flex={1}>
-      <VStack px={8} bg="GREEN" pt={8} rounded="xl">
-        <HStack alignItems="center">
+      <VStack  px={isVertical ? 8 : 32} bg="GREEN" pt={isVertical ? 12 : 4} rounded="xl">
+        <HStack alignItems="center" justifyContent="space-between">
           <TouchableOpacity onPress={handleGoBack}>
             <Icon as={Feather} name="arrow-left" size={8} color="gray.700" />
           </TouchableOpacity>
-          <Heading mx="auto" fontFamily="heading" fontSize="xl" flexShrink={1}>
+          <Heading fontFamily="heading" fontSize="xl" flexShrink={1}>
             Colmeia(s)
           </Heading>
+          <Center my={5}>
+        <TouchableOpacity
+          onPress={() => {}}
+          style={{
+            borderWidth: 2,
+            borderColor: "gray",
+            borderRadius: 999,
+            padding: 8,
+            width: "auto",
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+        >
+          <HStack justifyContent="center" alignItems="center">
+            <Icon as={Entypo} name="plus" color="gray.700" size={8} />
+            {isVertical ? <></> : <Heading fontSize="lg">Adicionar Colmeia</Heading>}
+            {/* <Heading fontSize="lg">Adicionar Colmeia</Heading> */}
+          </HStack>
+        </TouchableOpacity>
+      </Center>
         </HStack>
         <HStack
           justifyContent="space-between"
-          mt={4}
-          mb={4}
+          mt={isVertical ? 0 : -2}
           alignItems="center"
         >
           <HStack
@@ -64,30 +85,12 @@ export function ApiaryDetails() {
               </Text> 
             </Text>
             <Text fontSize="lg" ml={2}>
-              Total Colmeias: {hive.length}
+              Total Colmeias: <Text fontFamily="heading">{hive.length}</Text>
             </Text>
           </HStack>
         </HStack>
       </VStack>
-      <Center my={5}>
-        <TouchableOpacity
-          onPress={() => {}}
-          style={{
-            borderWidth: 2,
-            borderColor: "gray",
-            borderRadius: 8,
-            padding: 12,
-            width: "80%",
-            alignItems: "center",
-            justifyContent: "center",
-          }}
-        >
-          <HStack justifyContent="center" alignItems="center">
-            <Icon as={Entypo} name="plus" color="gray.700" size={8} />
-            <Heading fontSize="lg">Adicionar Colmeia</Heading>
-          </HStack>
-        </TouchableOpacity>
-      </Center>
+     
       <FlatList 
           px={8}
           data={hive}

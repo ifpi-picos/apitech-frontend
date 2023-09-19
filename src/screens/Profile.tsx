@@ -6,11 +6,14 @@ import { useAuth } from "../hooks/useAuth";
 import { useState } from "react";
 
 import { MaterialIcons } from '@expo/vector-icons';
+import { useWindowDimensions } from "react-native";
 
 
 export function Profile() {
   const { user } = useAuth();
   const [show, setShow] = useState(false);
+  const windowDimensions = useWindowDimensions();
+  const isVertical = windowDimensions.height > windowDimensions.width; // Verifica se a orientação é vertical
 
   
   return (
@@ -18,7 +21,7 @@ export function Profile() {
       <ScreenHeader title="Perfil" />
 
       <ScrollView>
-        <Center mt={33} px={33}>
+        <Center mt={33} px={isVertical ? 8 : 24}>
 
           <Input 
             borderWidth={2}
@@ -45,7 +48,7 @@ export function Profile() {
 
             />
         </Center>
-        <VStack px={10} mt={12} mb={9}>
+        <VStack px={isVertical ? 8 : 24} mt={12} mb={9}>
           <Heading fontFamily="heading" color="gray.300" fontSize="lg" mb={2}>
             Alterar senha
           </Heading>

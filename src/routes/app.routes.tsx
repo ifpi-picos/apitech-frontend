@@ -10,7 +10,7 @@ import ApiarySvg from "../assets/hive.svg";
 import { Profile } from "../screens/Profile";
 import { Apiary } from "../screens/Apiary";
 import { Home } from "../screens/Home";
-import { Platform } from "react-native";
+import { Platform, useWindowDimensions } from "react-native";
 import { ApiaryDetails } from "../screens/ApiaryDetails";
 import { Hive } from '../screens/Hive'
 
@@ -34,6 +34,12 @@ export function AppRoutes() {
 
   const iconSize = sizes[10];
 
+  const windowDimensions = useWindowDimensions();
+  const isVertical = windowDimensions.height > windowDimensions.width; // Verifica se a orientação é vertical
+
+  const sizeTabIOS = isVertical ? 95 : 65;
+  const sizeTabAndroid = isVertical ? 90 : 60;
+
   return(
     <Navigator
       screenOptions={{
@@ -43,8 +49,8 @@ export function AppRoutes() {
 
         tabBarStyle: {
           backgroundColor: "#A8D672",
-          height: Platform.OS === "android" ? 80 : 85,
-          paddingBottom: sizes[5],
+          height: Platform.OS === "android" ? sizeTabAndroid : sizeTabIOS,
+          paddingBottom: sizes[8],
           paddingTop: sizes[4],
           borderTopLeftRadius: 15,
           borderTopRightRadius: 15,
