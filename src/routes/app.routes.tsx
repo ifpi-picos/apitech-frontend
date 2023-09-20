@@ -38,7 +38,7 @@ export function AppRoutes() {
   const isVertical = windowDimensions.height > windowDimensions.width; // Verifica se a orientação é vertical
 
   const sizeTabIOS = isVertical ? 95 : 65;
-  const sizeTabAndroid = isVertical ? 90 : 60;
+  const sizeTabAndroid = isVertical ? 80 : 60;
 
   return(
     <Navigator
@@ -50,7 +50,7 @@ export function AppRoutes() {
         tabBarStyle: {
           backgroundColor: "#A8D672",
           height: Platform.OS === "android" ? sizeTabAndroid : sizeTabIOS,
-          paddingBottom: sizes[8],
+          paddingBottom: sizes[4],
           paddingTop: sizes[4],
           borderTopLeftRadius: 15,
           borderTopRightRadius: 15,

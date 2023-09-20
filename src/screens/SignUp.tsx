@@ -81,8 +81,6 @@ export function SignUp() {
               bgColor: 'red.500',
           });
       } else {
-          // Lidar com outros tipos de erros
-          // Você pode fornecer uma mensagem de erro padrão ou lidar com esses erros de forma diferente, conforme necessário.
           const title = 'Ocorreu um erro no servidor.';
           setIsLoadingSignUp(false);
 
@@ -101,7 +99,7 @@ export function SignUp() {
       showsVerticalScrollIndicator={false}
     >
       <VStack flex={1} px={10} pb={Platform.OS === "ios" ? 40 : 16}>
-        <Center  mt={32} mb={12}>
+        <Center  mt={20} mb={4}>
           <Heading color="gray.700" mr={8} lineHeight={"xs"} fontSize="5xl" fontFamily="heading">
             Api
           </Heading>

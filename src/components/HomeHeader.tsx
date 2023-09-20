@@ -27,7 +27,7 @@ export function HomeHeader() {
   }
 
   return (
-      <HStack bg='GREEN' pt={isVertical ? 16 : 4} rounded="xl" pb={5} px={isVertical ? 8 : 32} alignItems="center">
+      <HStack bg='GREEN' pt={isVertical ? 16 : 8} rounded="xl" pb={4} px={isVertical ? 8 : 32} alignItems="center">
 
         <VStack flex={1}>
           <Text color="gray.700" fontFamily="body" fontSize="lg">
