@@ -12,7 +12,7 @@ import {
 import { Center } from "native-base";
 import { Entypo } from "@expo/vector-icons";
 
-import { useNavigation } from "@react-navigation/native";
+import { useNavigation, useRoute } from "@react-navigation/native";
 import { AppNavigatorRoutesProps } from "../routes/app.routes";
 import { Feather } from "@expo/vector-icons";
 import { useEffect, useState } from "react";
@@ -20,11 +20,18 @@ import { ApiaryItem } from "../components/ApiaryItem";
 import { HiveItem } from "../components/HiveItem";
 import { useAuth } from "../hooks/useAuth";
 
+type RouteParamsProps = {
+  apiaryID: number;
+}
+
 export function ApiaryDetails() {
   const navigation = useNavigation<AppNavigatorRoutesProps>();
 
   const { apiarys, hive } = useAuth();
 
+  const route = useRoute();
+
+  const { apiaryID } = route.params as RouteParamsProps;
 
   function handleGoBack() {
     navigation.navigate("Apiário");

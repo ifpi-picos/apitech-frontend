@@ -6,6 +6,7 @@ import { storageUserGet, storageUserSave, storageUserRemove } from "../storage/s
 
 import { api } from "../services/api";
 import { UserDTO } from "../dtos/UserDTO";
+import { ApiaryDTO } from "../dtos/ApiaryDTO";
 
 export type AuthContextDataProps = {
   user: UserDTO;
@@ -13,14 +14,9 @@ export type AuthContextDataProps = {
   singOut: () => Promise<void>;
   isLoading: boolean;
   isLoadingUserStorageData: boolean;
-  apiarys: ApiaryProps[];
+  apiarys: ApiaryDTO[];
   hive: string[];
   fetchApiarys: () => Promise<void>;
-}
-
-type ApiaryProps = {
-  id: number;
-  nome: string;
 }
 
 type AuthContextProviderProps = {
@@ -33,9 +29,8 @@ export function AuthContextProvider({ children }: AuthContextProviderProps) {
   const toast = useToast();
   const [isLoading, setIsLoading] = useState(false);
 
-  const [apiarys, setApiarys] = useState<ApiaryProps[]>([]);
+  const [apiarys, setApiarys] = useState<ApiaryDTO[]>([]);
   const [hive, setHive] = useState<string[]>([])
-
 
 
   const [user, setUser] = useState<UserDTO>({} as UserDTO);
@@ -151,7 +146,6 @@ export function AuthContextProvider({ children }: AuthContextProviderProps) {
       if (response.data) {
         setIsLoading(false);
       }
-      console.log(response.data);
     } catch (error: any) {
       if (error.response && error.response.data && error.response.data.mensagem) {
 

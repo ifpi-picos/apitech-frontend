@@ -19,7 +19,9 @@ type AppRoutes = {
   Início: undefined;
   Perfil: undefined;
   Apiário: undefined;
-  Apiario_Detalhes: undefined;
+  Apiario_Detalhes:  {
+    apiaryID: number;
+  };
   Hive: undefined
 
 }

@@ -25,8 +25,8 @@ export function Apiary() {
   const windowDimensions = useWindowDimensions();
   const isVertical = windowDimensions.height > windowDimensions.width; // Verifica se a orientação é vertical
 
-  function handleOpenApiaryDetails() {
-    navigation.navigate('Apiario_Detalhes');
+  function handleOpenApiaryDetails(apiaryID: number) {
+    navigation.navigate('Apiario_Detalhes', { apiaryID });
   }
 
   useEffect(() => {
@@ -93,8 +93,8 @@ export function Apiary() {
           renderItem={({ item }) => (
             <ApiaryItem
               key={item.id}
-              nome={item.nome}
-              onPress={handleOpenApiaryDetails}
+              data={item}
+              onPress={() => handleOpenApiaryDetails(item.id)}
             />
           )}
           showsVerticalScrollIndicator={false}
