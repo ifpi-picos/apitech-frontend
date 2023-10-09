@@ -1,5 +1,5 @@
 import { ActivityIndicator, TouchableOpacity, useWindowDimensions } from "react-native";
-import { useNavigation } from "@react-navigation/native";
+import { useNavigation, useRoute } from "@react-navigation/native";
 import { Center, Text, VStack, Icon, Heading, HStack, FlatList, useToast, Spinner } from "native-base";
 import { Entypo } from '@expo/vector-icons'; 
 
@@ -12,39 +12,46 @@ import { useEffect, useState } from "react";
 import { useAuth } from "../hooks/useAuth";
 
 import { useIsFocused } from '@react-navigation/native';
+import { AuthNavigatorRoutesProps } from "../routes/auth.routes";
 
+type AddApiaryParamsProps = {
+  usuarioId: number;
+}
 
 export function Apiary() {
   const toast = useToast();
 
-  const { apiarys, fetchApiarys } = useAuth();
+  const route = useRoute();
+
+  const { apiarys, fetchApiarys, user, isLoadingApiarys } = useAuth();
 
   const [loading, setLoading] = useState(true);
   const isFocused = useIsFocused();
   const navigation = useNavigation<AppNavigatorRoutesProps>();
+  
   const windowDimensions = useWindowDimensions();
   const isVertical = windowDimensions.height > windowDimensions.width; // Verifica se a orientação é vertical
+
+  // const { usuarioId } = route.params as AddApiaryParamsProps;
 
   function handleOpenApiaryDetails(apiaryID: number) {
     navigation.navigate('Apiario_Detalhes', { apiaryID });
   }
 
+  function handleAddApiary() {
+    navigation.navigate('Adicionando_Apiario');
+  }
+
   useEffect(() => {
-    if (isFocused) {
-      setTimeout(() => {
-        setLoading(false);
-      }, 1000);
-      fetchApiarys();
-    }
-    setLoading(true);
+    fetchApiarys();
   }, [isFocused]);
 
   return (
     <VStack flex={1}>
-      <ScreenHeader title="Apiário">
+      <ScreenHeader title="Apiários">
       <Center>
         <TouchableOpacity
-          onPress={() => { }}
+          onPress={() => handleAddApiary}
           style={{
             borderWidth: 2,
             borderColor: 'gray',
@@ -79,14 +86,9 @@ export function Apiary() {
 
 
 
-        {loading ? <HStack space={8} flex={1} justifyContent="center" alignItems="center">
+        {isLoadingApiarys ? <HStack space={8} flex={1} justifyContent="center" alignItems="center">
           <Spinner color="emerald.500" size="lg" />
-        </HStack> : apiarys.length === 0 ? 
-        (
-        <VStack flex={1} alignContent="center" justifyContent="center">
-          <Text fontSize="lg" textAlign="center" >Nenhum Apiário cadastrado</Text>
-        </VStack>
-        ) : 
+        </HStack> : 
         <FlatList 
           data={apiarys}
           keyExtractor={(item) => item.id.toString()}
@@ -100,6 +102,9 @@ export function Apiary() {
           showsVerticalScrollIndicator={false}
           _contentContainerStyle={{ pb: 10 }}
           contentContainerStyle={ apiarys.length === 0 && { flex: 1, justifyContent: "center" } }
+          ListEmptyComponent={() => (
+            <Text fontSize="lg" textAlign="center">Nenhum Apiário cadastrado</Text>
+          )}
         />}
 
       </VStack>

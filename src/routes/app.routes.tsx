@@ -13,6 +13,7 @@ import { Home } from "../screens/Home";
 import { Platform, useWindowDimensions } from "react-native";
 import { ApiaryDetails } from "../screens/ApiaryDetails";
 import { Hive } from '../screens/Hive'
+import { AddApiary } from "../screens/AddApiary";
 
 
 type AppRoutes = {
@@ -22,8 +23,8 @@ type AppRoutes = {
   Apiario_Detalhes:  {
     apiaryID: number;
   };
-  Hive: undefined
-
+  Hive: undefined;
+  Adicionando_Apiario: undefined;
 }
 //sao as propriedades das rotas de navegacao da aplicacao.
 export type AppNavigatorRoutesProps = BottomTabNavigationProp<AppRoutes>;
@@ -96,6 +97,13 @@ export function AppRoutes() {
       <Screen 
         name= "Hive"
         component={Hive}
+        options={{
+          tabBarButton: () => null
+        }}
+      />
+      <Screen 
+        name= "Adicionando_Apiario"
+        component={AddApiary}
         options={{
           tabBarButton: () => null
         }}

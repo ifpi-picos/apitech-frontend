@@ -17,6 +17,8 @@ export type AuthContextDataProps = {
   apiarys: ApiaryDTO[];
   hive: string[];
   fetchApiarys: () => Promise<void>;
+  setApiarys: React.Dispatch<React.SetStateAction<ApiaryDTO[]>>;
+  isLoadingApiarys: boolean;
 }
 
 type AuthContextProviderProps = {
@@ -28,6 +30,7 @@ export const AuthContext = createContext<AuthContextDataProps>({} as AuthContext
 export function AuthContextProvider({ children }: AuthContextProviderProps) {
   const toast = useToast();
   const [isLoading, setIsLoading] = useState(false);
+  const [isLoadingApiarys, setIsLoadingApiarys] = useState(true);
 
   const [apiarys, setApiarys] = useState<ApiaryDTO[]>([]);
   const [hive, setHive] = useState<string[]>([])
@@ -139,13 +142,11 @@ export function AuthContextProvider({ children }: AuthContextProviderProps) {
 
   async function fetchApiarys() {
     try {
-      setIsLoading(true);
+      setIsLoadingApiarys(true);
 
       const response = await api.get('/apiarios');
       setApiarys(response.data);
-      if (response.data) {
-        setIsLoading(false);
-      }
+      console.log(response.data);
     } catch (error: any) {
       if (error.response && error.response.data && error.response.data.mensagem) {
 
@@ -162,6 +163,8 @@ export function AuthContextProvider({ children }: AuthContextProviderProps) {
           bgColor: 'red.500',
         });
       }
+    } finally {
+      setIsLoadingApiarys(false);
     }
   }
 
@@ -190,7 +193,7 @@ export function AuthContextProvider({ children }: AuthContextProviderProps) {
   // }
 
   return (
-    <AuthContext.Provider value={{ user, singIn, isLoading, isLoadingUserStorageData, singOut, apiarys, hive, fetchApiarys }}>
+    <AuthContext.Provider value={{ user, singIn, isLoading, isLoadingUserStorageData, singOut, apiarys, hive, fetchApiarys, setApiarys, isLoadingApiarys }}>
       {children}
     </AuthContext.Provider>
   )
