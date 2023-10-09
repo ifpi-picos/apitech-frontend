@@ -2,7 +2,7 @@ import { Button as ButtonNativeBase, IButtonProps, Text } from 'native-base';
 
 type Props = IButtonProps & {
   title: string;
-  variant?: "Subtle" | "solid"; 
+  variant?: "Subtle" | "solid" ; 
 }
 
 export function Button({ title, variant = "solid", ...rest }: Props) {
@@ -20,7 +20,7 @@ export function Button({ title, variant = "solid", ...rest }: Props) {
       {...rest}
     >
       <Text 
-        color= "gray.700"
+        color= "WHITE"
         fontFamily="heading"
         fontSize="lg"
       >

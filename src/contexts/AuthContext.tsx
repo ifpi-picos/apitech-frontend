@@ -19,6 +19,7 @@ export type AuthContextDataProps = {
   fetchApiarys: () => Promise<void>;
   setApiarys: React.Dispatch<React.SetStateAction<ApiaryDTO[]>>;
   isLoadingApiarys: boolean;
+  handleDeleteUser: () => Promise<void>;
 }
 
 type AuthContextProviderProps = {
@@ -101,6 +102,35 @@ export function AuthContextProvider({ children }: AuthContextProviderProps) {
     }
   }
 
+  const handleDeleteUser = async () => {
+    try {
+      const token = await storageAuthTokenGet();
+      const headers = { Authorization: `Bearer ${token}` };
+      
+
+      const response = await api.delete('/usuarios', { headers });
+
+      if (response.status === 200) {
+        setIsLoadingUserStorageData(true);
+        setUser({} as UserDTO); // definir usuario
+        await storageUserRemove();
+        await storageAuthTokenRemove();
+        
+        console.log('Usuário excluído com sucesso!');
+        toast.show({
+          title: response.data.mensagem,
+          placement: 'top',
+          bgColor: 'green.500',
+        });
+        setIsLoadingUserStorageData(false);
+      }
+    } catch (error: any){
+      console.log('Erro ao excluir o usuário:', error.message);
+    } finally {
+      setIsLoadingUserStorageData(false);
+    }
+  };
+  
   async function singOut() {
     try {
       setIsLoadingUserStorageData(true);
@@ -193,7 +223,7 @@ export function AuthContextProvider({ children }: AuthContextProviderProps) {
   // }
 
   return (
-    <AuthContext.Provider value={{ user, singIn, isLoading, isLoadingUserStorageData, singOut, apiarys, hive, fetchApiarys, setApiarys, isLoadingApiarys }}>
+    <AuthContext.Provider value={{ user, singIn, isLoading, isLoadingUserStorageData, singOut, apiarys, hive, fetchApiarys, setApiarys, isLoadingApiarys, handleDeleteUser }}>
       {children}
     </AuthContext.Provider>
   )

@@ -120,6 +120,7 @@ export function SignIn() {
           <Button
             title="Registrar-se"
             variant="Subtle"
+            bg="gray.300"
             onPress={handleNewAccount}
             />
           </VStack>

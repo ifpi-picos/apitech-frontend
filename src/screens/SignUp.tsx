@@ -222,6 +222,8 @@ export function SignUp() {
           
           title="Voltar para o login"
           variant="Subtle"
+          bg="gray.300"
+
           onPress={handleGoBack}
           />
           </Box>
