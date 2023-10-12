@@ -43,7 +43,9 @@ export function Apiary() {
   }
 
   useEffect(() => {
-    fetchApiarys();
+    if (isFocused) {
+      fetchApiarys();
+    }
   }, [isFocused]);
 
   return (
@@ -80,7 +82,16 @@ export function Apiary() {
         <HStack justifyContent="space-between" mb={4}>
           <Heading fontFamily="heading" fontSize="lg">Meus Apiários</Heading>
           <Text fontSize="lg" ml={2}>
-            Total: {apiarys.length}
+            Total:{' '}
+            {isLoadingApiarys ? (
+                  <HStack space={8} px={2} flex={1} justifyContent="center" alignItems="center">
+                    <Spinner color="emerald.500" size="sm" />
+                  </HStack> 
+                ) :
+                <Text fontFamily="heading">
+                  {apiarys.length < 10 ? `0${apiarys.length}` : apiarys.length}
+                </Text>
+                }
           </Text>
         </HStack>
 

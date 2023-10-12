@@ -147,7 +147,10 @@ export function ApiaryDetails() {
                 }
             </Text>
             <Text fontSize="lg" ml={2}>
-              Total Colmeias: <Text fontFamily="heading">{hive.length}</Text>
+              Total Colmeias: {' '}
+              <Text fontFamily="heading">
+                {hive.length< 10 ? `0${hive.length}` : hive.length}
+              </Text>
             </Text>
           </HStack>
         </HStack>

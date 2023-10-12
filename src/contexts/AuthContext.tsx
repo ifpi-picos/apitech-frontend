@@ -116,7 +116,6 @@ export function AuthContextProvider({ children }: AuthContextProviderProps) {
         await storageUserRemove();
         await storageAuthTokenRemove();
         
-        console.log('Usuário excluído com sucesso!');
         toast.show({
           title: response.data.mensagem,
           placement: 'top',
