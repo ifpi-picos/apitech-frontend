@@ -1,9 +1,9 @@
-import { Center, Heading, Icon, Pressable, ScrollView, VStack, Text, useToast } from "native-base";
+import { Center, Heading, Icon, Pressable, ScrollView, VStack, Text, useToast, AlertDialog, Button } from "native-base";
 import { ScreenHeader } from "../components/ScreenHeader";
 import { Input } from "../components/Input";
-import { Button } from "../components/Button";
+// import { Button } from "../components/Button";
 import { useAuth } from "../hooks/useAuth";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import * as yup from 'yup';
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -21,7 +21,7 @@ type FormDataProps = {
 }
 
 const profileSchema = yup.object({
-  
+
   nome: yup.string().required('Informe o nome.').min(3, 'O nome deve ter no mínimo 2 caracteres.').test('no-spaces', 'O nome não pode conter espaços.', value => {
     return value ? !/\s/.test(value) : true;
   }),
@@ -39,19 +39,20 @@ const profileSchema = yup.object({
         .required('Informe a confirmação da senha.')
         .transform((value) => !!value ? value : null),
     })
-})  
+})
 
 export function Profile() {
   const [isUpdating, setIsUpdating] = useState(false);
   const { user, handleDeleteUser, updateUserProfile } = useAuth();
   const [show, setShow] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
   const windowDimensions = useWindowDimensions();
   const isVertical = windowDimensions.height > windowDimensions.width; // Verifica se a orientação é vertical
 
   const toast = useToast();
 
 
-  const { control, handleSubmit, formState: {errors} } = useForm<FormDataProps>({
+  const { control, handleSubmit, formState: { errors } } = useForm<FormDataProps>({
     defaultValues: {
       nome: user.nome,
       email: user.email,
@@ -61,10 +62,17 @@ export function Profile() {
     },
     resolver: yupResolver(profileSchema)
   });
-
-  const handleDeleteUserProfile = () => {
+  const onClose = () => {
+    setIsOpen(false)
     handleDeleteUser();
+  };
+  const onCloseCancel = () => {
+    setIsOpen(false)
+  };
+  const handleDeleteUserProfile = () => {
+    setIsOpen(!isOpen)
   }
+  const cancelRef = useRef(null);
 
   async function handleProfileUpdate(data: FormDataProps) {
     try {
@@ -74,7 +82,7 @@ export function Profile() {
       userUpdated.nome = data.nome;
       userUpdated.email = data.email;
 
-      await api.patch('/usuarios', {nome: data.nome, email: data.email, senha: data.password});
+      await api.patch('/usuarios', { nome: data.nome, email: data.email, senha: data.password });
 
       await updateUserProfile(userUpdated);
 
@@ -139,7 +147,7 @@ export function Profile() {
             rules={{
               required: 'Informe o e-mail',
               pattern: {
-                value:/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+                value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
                 message: 'Informe um E-mail válido'
               }
             }}
@@ -223,7 +231,7 @@ export function Profile() {
           <Controller
             control={control}
             name="password_confirmation"
-            render={({ field: { onChange,value } }) => (
+            render={({ field: { onChange, value } }) => (
               <Input
                 borderWidth={2}
                 bg="gray.500"
@@ -258,8 +266,48 @@ export function Profile() {
             mt={4}
             onPress={handleSubmit(handleProfileUpdate)}
             isLoading={isUpdating}
-          />
-          <Button bg="red.500" mt={4} title="Excluir usuário" onPress={handleDeleteUserProfile} />
+          >
+            <Text fontFamily="heading" fontSize="lg" color="WHITE">
+              Salvar alterações
+            </Text>
+          </Button>
+          <Button
+            fontFamily="heading"
+            fontSize="lg"
+            bg="red.500"
+            mt={4}
+            title="Excluir usuário"
+            onPress={handleDeleteUserProfile}>
+            <Text fontFamily="heading" fontSize="lg" color="WHITE">
+              Excluir usuário
+            </Text>
+          </Button>
+
+          <AlertDialog leastDestructiveRef={cancelRef} isOpen={isOpen} onClose={onCloseCancel}>
+            <AlertDialog.Content>
+              <AlertDialog.CloseButton />
+              <AlertDialog.Header>Cancelar</AlertDialog.Header>
+              <AlertDialog.Body flex={1} alignItems="center">
+                <Text fontFamily="heading" textAlign="center" fontSize="xl">
+                  Desejar realmente Excluir Usuário?
+                </Text>
+              </AlertDialog.Body>
+              <AlertDialog.Footer>
+                <Button.Group space={2} flex={1} alignItems="center" justifyContent="space-around">
+                  <Button variant="unstyled" py={4} flex={1} colorScheme="coolGray" onPress={onCloseCancel} ref={cancelRef}>
+                    <Text fontSize="xl">
+                      Cancelar
+                    </Text>
+                  </Button>
+                  <Button colorScheme="danger" py={4} flex={1} onPress={onClose}>
+                    <Text color="white" fontSize="xl">
+                      Excluir
+                    </Text>
+                  </Button>
+                </Button.Group>
+              </AlertDialog.Footer>
+            </AlertDialog.Content>
+          </AlertDialog>
         </VStack>
 
 
