@@ -20,6 +20,7 @@ export type AuthContextDataProps = {
   setApiarys: React.Dispatch<React.SetStateAction<ApiaryDTO[]>>;
   isLoadingApiarys: boolean;
   handleDeleteUser: () => Promise<void>;
+  updateUserProfile: (userUpdate: UserDTO) => Promise<void>;
 }
 
 type AuthContextProviderProps = {
@@ -38,6 +39,7 @@ export function AuthContextProvider({ children }: AuthContextProviderProps) {
 
 
   const [user, setUser] = useState<UserDTO>({} as UserDTO);
+
   const [isLoadingUserStorageData, setIsLoadingUserStorageData] = useState(true);
   
   async function userAndTokenUpdate(userData: UserDTO, token: string) {
@@ -124,6 +126,23 @@ export function AuthContextProvider({ children }: AuthContextProviderProps) {
         setIsLoadingUserStorageData(false);
       }
     } catch (error: any){
+      if (error.response && error.response.data && error.response.data.mensagem) {
+        setIsLoading(false);
+
+        toast.show({
+          title: error.response.data.mensagem,
+          placement: 'top',
+          bgColor: 'red.500',
+        });
+      } else {
+        setIsLoading(false);
+
+        toast.show({
+          title: 'Ocorreu um erro no servidor.',
+          placement: 'top',
+          bgColor: 'red.500',
+        });
+      }
       console.log('Erro ao excluir o usuário:', error.message);
     } finally {
       setIsLoadingUserStorageData(false);
@@ -143,6 +162,15 @@ export function AuthContextProvider({ children }: AuthContextProviderProps) {
       throw error;
     } finally {
       setIsLoadingUserStorageData(false);
+    }
+  }
+
+  async function updateUserProfile(userUpdate: UserDTO) {
+    try {
+      setUser(userUpdate);
+      await storageUserSave(userUpdate);
+    } catch (error) {
+      throw error;
     }
   }
 
@@ -222,7 +250,7 @@ export function AuthContextProvider({ children }: AuthContextProviderProps) {
   // }
 
   return (
-    <AuthContext.Provider value={{ user, singIn, isLoading, isLoadingUserStorageData, singOut, apiarys, hive, fetchApiarys, setApiarys, isLoadingApiarys, handleDeleteUser }}>
+    <AuthContext.Provider value={{ user, singIn, isLoading, isLoadingUserStorageData, singOut, apiarys, hive, fetchApiarys, setApiarys, isLoadingApiarys, handleDeleteUser, updateUserProfile }}>
       {children}
     </AuthContext.Provider>
   )

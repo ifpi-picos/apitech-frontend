@@ -22,7 +22,9 @@ type FormDataProps = {
 }
 
 const signUpSchema = yup.object({
-  name: yup.string().required('Informe o nome.').min(3, 'O nome deve ter no mínimo 2 caracteres.'),
+  name: yup.string().required('Informe o nome.').min(3, 'O nome deve ter no mínimo 2 caracteres.').test('no-spaces', 'O nome não pode conter espaços.', value => {
+    return value ? !/\s/.test(value) : true;
+  }),
   email: yup.string().required('Informe o e-mail.').email('Informe um E-mail válido.'),
   password: yup.string().required('Informe a senha.').min(8, 'A senha deve ter no mínimo 8 caracteres.'),
   password_confirm: yup.string().required('Informe a confirmação da senha.').oneOf([yup.ref('password')], 'As senhas devem ser iguais.')
