@@ -196,14 +196,7 @@ export function AuthContextProvider({ children }: AuthContextProviderProps) {
     loadUserData();
   }, []);
 
-  
-  useEffect(() => {
-    const subscribe = api.registerInterceptTokenManeger(singOut);
 
-    return () => {
-      subscribe();
-    }
-  }, [singOut]);
 
   async function fetchApiarys() {
     try {

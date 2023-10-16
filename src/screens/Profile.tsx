@@ -1,40 +1,62 @@
-import { Center, Heading, Icon, Pressable, ScrollView, VStack, Text, useToast, AlertDialog, Button } from "native-base";
-import { ScreenHeader } from "../components/ScreenHeader";
+import { AlertDialog, Button, Center, Heading, Icon, Pressable, ScrollView, Text, VStack, useToast } from "native-base";
 import { Input } from "../components/Input";
+import { ScreenHeader } from "../components/ScreenHeader";
 // import { Button } from "../components/Button";
-import { useAuth } from "../hooks/useAuth";
+import { MaterialIcons } from '@expo/vector-icons';
+import { yupResolver } from "@hookform/resolvers/yup";
 import { useRef, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
-import * as yup from 'yup';
-import { yupResolver } from "@hookform/resolvers/yup";
-import { MaterialIcons } from '@expo/vector-icons';
 import { useWindowDimensions } from "react-native";
+import * as yup from 'yup';
+import { useAuth } from "../hooks/useAuth";
 import { api } from "../services/api";
 
 
 type FormDataProps = {
   nome: string;
   email: string;
-  password?: string | null;
-  old_password?: string;
-  password_confirmation?: string | null;
+  old_password: string;
+  password: string;
+  password_confirmation: string;
 }
 
 const profileSchema = yup.object({
 
-  nome: yup.string().required('Informe o nome.').min(3, 'O nome deve ter no mínimo 2 caracteres.').test('no-spaces', 'O nome não pode conter espaços.', value => {
+  nome: yup
+    .string()
+    .required('Informe o nome.')
+    .min(3, 'O nome deve ter no mínimo 3 caracteres.')
+    .test('no-spaces', 'O nome não pode conter espaços.', value => {
     return value ? !/\s/.test(value) : true;
   }),
-  email: yup.string().required('Informe o e-mail.').email('Informe um E-mail válido.'),
-  password: yup.string().min(8, 'A senha deve ter no mínimo 8 caracteres.').nullable().transform((value) => !!value ? value : null),
+
+  email: yup
+    .string()
+    .required('Informe o e-mail.')
+    .email('Informe um E-mail válido.'),
+
+  // old_password: yup
+  //   .string()
+  //   .required('Informe a senha Atual')
+  //   .min(8, 'A senha deve ter no mínimo 8 caracteres.')
+  //   .nullable()
+  //   .transform((value) => !!value ? value : null),
+
+  password: yup
+    .string()
+    .min(8, 'A senha deve ter no mínimo 8 caracteres.')
+    .nullable()
+    .transform((value) => !!value ? value : null),
+
   password_confirmation: yup
     .string()
     .nullable()
     .transform((value) => !!value ? value : null)
-    .oneOf([yup.ref('password')], 'As senhas devem ser iguais.')
+    .oneOf([yup.ref('password'), null], 'As senhas devem ser iguais.')
     .when('password', {
       is: (Field: any) => Field,
       then: (schema) => schema
+        
         .nullable()
         .required('Informe a confirmação da senha.')
         .transform((value) => !!value ? value : null),
@@ -44,6 +66,9 @@ const profileSchema = yup.object({
 export function Profile() {
   const [isUpdating, setIsUpdating] = useState(false);
   const { user, handleDeleteUser, updateUserProfile } = useAuth();
+  const [passwordValue, setPasswordValue] = useState('');
+  const [passwordConfirmationValue, setPasswordConfirmationValue] = useState('');
+
   const [show, setShow] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
   const windowDimensions = useWindowDimensions();
@@ -56,11 +81,10 @@ export function Profile() {
     defaultValues: {
       nome: user.nome,
       email: user.email,
-      password: '',
-      old_password: '',
-      password_confirmation: ''
+      password: undefined,
+      password_confirmation: undefined,
     },
-    resolver: yupResolver(profileSchema)
+    resolver: yupResolver(profileSchema) as any
   });
   const onClose = () => {
     setIsOpen(false)
@@ -75,6 +99,7 @@ export function Profile() {
   const cancelRef = useRef(null);
 
   async function handleProfileUpdate(data: FormDataProps) {
+    console.log(data);
     try {
       setIsUpdating(true);
 
@@ -82,10 +107,11 @@ export function Profile() {
       userUpdated.nome = data.nome;
       userUpdated.email = data.email;
 
-      await api.patch('/usuarios', { nome: data.nome, email: data.email, senha: data.password });
+      await api.patch('/usuarios', { nome: data?.nome, email: data?.email, senha: data?.password });
 
       await updateUserProfile(userUpdated);
-
+      setPasswordValue('');
+      setPasswordConfirmationValue('');
       toast.show({
         title: 'Perfil atualizado com sucesso!',
         placement: 'top',
@@ -186,7 +212,6 @@ export function Profile() {
                 bg="gray.500"
                 color="gray.100"
                 rounded="lg"
-                label="Senha atual"
                 placeholder="Senha atual"
                 onChangeText={onChange}
                 type={show ? "text" : "password"}
@@ -204,15 +229,19 @@ export function Profile() {
           <Controller
             control={control}
             name="password"
-            render={({ field: { onChange, value } }) => (
+            render={({ field: { onChange } }) => (
               <Input
                 borderWidth={2}
                 bg="gray.500"
                 color="gray.100"
                 rounded="lg"
                 label="Nova senha"
-                onChangeText={onChange}
-                value={value}
+                
+                onChangeText={(value) => {
+                  setPasswordValue(value);
+                  onChange(value);
+                }}
+                value={passwordValue}
                 placeholder="Nova senha"
                 errorMessage={errors.password?.message}
                 type={show ? "text" : "password"}
@@ -231,16 +260,20 @@ export function Profile() {
           <Controller
             control={control}
             name="password_confirmation"
-            render={({ field: { onChange, value } }) => (
+            render={({ field: { onChange } }) => (
               <Input
                 borderWidth={2}
                 bg="gray.500"
                 color="gray.100"
                 rounded="lg"
+
                 label="Nova senha"
                 errorMessage={errors.password_confirmation?.message}
-                onChangeText={onChange}
-                value={value}
+                onChangeText={(value) => {
+                  setPasswordConfirmationValue(value);
+                  onChange(value);
+                }}
+                value={passwordConfirmationValue}
                 placeholder="Confirme a nova senha"
                 type={show ? "text" : "password"}
                 InputRightElement={
