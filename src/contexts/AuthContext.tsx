@@ -143,7 +143,6 @@ export function AuthContextProvider({ children }: AuthContextProviderProps) {
           bgColor: 'red.500',
         });
       }
-      console.log('Erro ao excluir o usuário:', error.message);
     } finally {
       setIsLoadingUserStorageData(false);
     }
@@ -197,13 +196,21 @@ export function AuthContextProvider({ children }: AuthContextProviderProps) {
     loadUserData();
   }, []);
 
+  
+  useEffect(() => {
+    const subscribe = api.registerInterceptTokenManeger(singOut);
+
+    return () => {
+      subscribe();
+    }
+  }, [singOut]);
+
   async function fetchApiarys() {
     try {
       setIsLoadingApiarys(true);
 
       const response = await api.get('/apiarios');
       setApiarys(response.data);
-      console.log(response.data);
     } catch (error: any) {
       if (error.response && error.response.data && error.response.data.mensagem) {
 
