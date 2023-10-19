@@ -24,7 +24,9 @@ type AppRoutes = {
     apiaryID: number;
   };
   Hive: undefined;
-  Adicionando_Apiario: undefined;
+  Adicionando_Apiario:  {
+    usuarioId: number;
+  };
 }
 //sao as propriedades das rotas de navegacao da aplicacao.
 export type AppNavigatorRoutesProps = BottomTabNavigationProp<AppRoutes>;

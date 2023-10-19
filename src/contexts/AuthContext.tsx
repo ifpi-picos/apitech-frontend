@@ -21,6 +21,7 @@ export type AuthContextDataProps = {
   isLoadingApiarys: boolean;
   handleDeleteUser: () => Promise<void>;
   updateUserProfile: (userUpdate: UserDTO) => Promise<void>;
+
 }
 
 type AuthContextProviderProps = {

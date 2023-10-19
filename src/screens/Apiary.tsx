@@ -14,9 +14,6 @@ import { useAuth } from "../hooks/useAuth";
 import { useIsFocused } from '@react-navigation/native';
 import { AuthNavigatorRoutesProps } from "../routes/auth.routes";
 
-type AddApiaryParamsProps = {
-  usuarioId: number;
-}
 
 export function Apiary() {
   const toast = useToast();
@@ -38,8 +35,8 @@ export function Apiary() {
     navigation.navigate('Apiario_Detalhes', { apiaryID });
   }
 
-  function handleAddApiary() {
-    navigation.navigate('Adicionando_Apiario');
+  function handleAddApiary(usuarioId: number) {
+    navigation.navigate('Adicionando_Apiario', { usuarioId });
   }
 
   useEffect(() => {
@@ -53,7 +50,7 @@ export function Apiary() {
       <ScreenHeader title="Apiários">
       <Center>
         <TouchableOpacity
-          onPress={() => handleAddApiary}
+          onPress={() => handleAddApiary(user.id)}
           style={{
             borderWidth: 2,
             borderColor: 'gray',
