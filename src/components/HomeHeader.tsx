@@ -26,12 +26,26 @@ export function HomeHeader() {
     setIsOpen(!isOpen)
   }
 
+  function getGreeting() {
+    const agora = new Date();
+    const horaLocal = agora.getHours();
+    const horaBrasilia = horaLocal - 3; // Diferença de 3 horas para o fuso horário de Brasília
+  
+    if (horaBrasilia >= 5 && horaBrasilia < 12) {
+      return 'Bom dia';
+    } else if (horaBrasilia >= 12 && horaBrasilia < 18) {
+      return 'Boa tarde';
+    } else {
+      return 'Boa noite';
+    }
+  }
+
   return (
       <HStack bg='GREEN' pt={isVertical ? 16 : 8} rounded="xl" pb={4} px={isVertical ? 8 : 32} alignItems="center">
 
         <VStack flex={1}>
           <Text color="gray.700" fontFamily="body" fontSize="lg">
-            Olá, Bom dia
+            Olá, {getGreeting()}
           </Text>
 
           <Heading color="gray.700" fontFamily="heading" textTransform="capitalize" fontSize="lg">
