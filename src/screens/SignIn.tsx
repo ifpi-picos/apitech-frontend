@@ -3,14 +3,15 @@ import { useNavigation } from "@react-navigation/native";
 import { Center, Heading, Text, VStack, ScrollView, Pressable, Icon } from "native-base"
 import { Platform } from "react-native";
 
-import { AuthNavigatorRoutesProps } from "../routes/auth.routes";
+import { AuthNavigatorRoutesProps, } from "../routes/auth.routes";
 import { MaterialIcons } from '@expo/vector-icons';
 
 import { useAuth } from "../hooks/useAuth";
-
+//import { Button } from "native-base";
 import { Input } from "../components/Input";
 import { Button } from "../components/Button";
 import { useState } from "react";
+import { RecoverPassword } from "./RecoverPassword";
 
 type FormData = {
   email: string;
@@ -32,7 +33,10 @@ export function SignIn() {
   function handleSignIn({ email, password }: FormData) {
     singIn(email, password);
   }
-
+  const handleRecoverPassword = () => {
+    navigation.navigate('recoverPassword');
+  };
+ 
   return (
     <ScrollView
       contentContainerStyle={{ flexGrow: 1 }}
@@ -90,12 +94,21 @@ export function SignIn() {
                       name={show ? "visibility" : "visibility-off"} />} 
                       size={5} mr="2" color="gray.100"  />
                   </Pressable>
+
                 } 
 
               />
 
             )}
           />
+             
+          <Center pb={2}>
+            
+            <Text
+              onPress={handleRecoverPassword}  //funcionou
+            >Redefinir senha</Text>
+            
+          </Center>
 
           <Button
             onPress={handleSubmit(handleSignIn)}

@@ -2,11 +2,13 @@ import { createNativeStackNavigator, NativeStackNavigationProp } from '@react-na
 
 import { SignIn } from '../screens/SignIn';
 import { SignUp } from '../screens/SignUp';
+import { RecoverPassword } from '../screens/RecoverPassword';
 
 
 type AuthRoutes = {
   signIn: undefined;
   signUp: undefined;
+  recoverPassword: undefined;
 }
 
 //sao as propriedades das rotas de navegacao de autentificacao.
@@ -25,6 +27,10 @@ export function AuthRoutes() {
           <Screen
             name="signUp"
             component={SignUp}
+          />
+          <Screen
+            name="recoverPassword"
+            component={RecoverPassword}
           />
       </Navigator>
     )
