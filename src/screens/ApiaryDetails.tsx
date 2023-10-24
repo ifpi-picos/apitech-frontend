@@ -35,7 +35,7 @@ export function ApiaryDetails() {
 
   const navigation = useNavigation<AppNavigatorRoutesProps>();
 
-  const { apiarys, hive, setApiarys } = useAuth();
+  const { apiarys, hive, setApiarys, setHive } = useAuth();
 
   const route = useRoute();
   const toast = useToast();
@@ -51,7 +51,7 @@ export function ApiaryDetails() {
     try {
       setIsLoading(true);
       const response = await api.get(`/colmeias?apiarioId=${apiaryID}`);
-      setHideData(response.data);
+      setHive(response.data);
       console.log(response.data);
 
 
@@ -75,6 +75,30 @@ export function ApiaryDetails() {
       setIsLoading(false);
     }
   }
+
+    // async function fetchHiveByApiarys() {
+  //   try{
+  //     const response = await api.get(`/colmeias?apiarioId=0`);
+  //     setHive(response.data);	
+      
+  //   } catch (error: any) {
+  //     if (error.response && error.response.data && error.response.data.mensagem) {
+
+  //       toast.show({
+  //         title: error.response.data.mensagem,
+  //         placement: 'top',
+  //         bgColor: 'red.500',
+  //       });
+  //     } else {
+
+  //       toast.show({
+  //         title: 'Ocorreu um erro no servidor.',
+  //         placement: 'top',
+  //         bgColor: 'red.500',
+  //       });
+  //     }
+  //   }
+  // }
 
   function handleOpenApiaryDetails() {
     navigation.navigate('Hive');
@@ -163,15 +187,16 @@ export function ApiaryDetails() {
       <FlatList
         px={8}
         data={hive}
-        keyExtractor={(item) => item}
+        keyExtractor={(item) => item.id.toString()}
         renderItem={({ item }) => (
           <HiveItem
             onPress={() => handleOpenApiaryDetails}
+            data={item}
           />
         )}
         showsVerticalScrollIndicator={false}
         _contentContainerStyle={{ pb: 10 }}
-        contentContainerStyle={hive.length === 0 && { flex: 1, justifyContent: "center" }}
+        contentContainerStyle={hive.length === 0 &&  { flex: 1, justifyContent: "center" }}
         ListEmptyComponent={() => (
           <Text fontSize="lg" textAlign="center">Nenhuma Colmeia cadastrada</Text>
         )

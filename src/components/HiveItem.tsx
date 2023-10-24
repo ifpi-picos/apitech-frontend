@@ -1,13 +1,14 @@
 import { HStack, VStack, Heading, Icon, Text } from "native-base";
 import { TouchableOpacity, TouchableOpacityProps } from "react-native";
 import { Entypo } from '@expo/vector-icons';
+import { HiveDTO } from "../dtos/HiveDTO";
 
 
 type Props = TouchableOpacityProps & {
-
+  data: HiveDTO;
 }
 
-export function HiveItem({ ...rest }: Props) {
+export function HiveItem({ data, ...rest }: Props) {
   return (
     <TouchableOpacity {...rest}>
       <HStack
@@ -16,11 +17,10 @@ export function HiveItem({ ...rest }: Props) {
         p={2}
         pr={4}
         rounded="md"
-        mb={3}
+        my={3}
       >
         <VStack flex={1}>
-          <Heading fontSize="xxl">Colmeia Produto</Heading>
-          <Text fontSize="lg">Numero da Colmeia: 01</Text>
+          <Heading fontSize="lg">Numero da Colmeia: 0{data.numero}</Heading>
         </VStack>
         <Icon as={<Entypo name="chevron-right" />} size="lg" />
       </HStack>

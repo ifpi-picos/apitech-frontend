@@ -7,6 +7,7 @@ import { storageUserGet, storageUserSave, storageUserRemove } from "../storage/s
 import { api } from "../services/api";
 import { UserDTO } from "../dtos/UserDTO";
 import { ApiaryDTO } from "../dtos/ApiaryDTO";
+import { HiveDTO } from "../dtos/HiveDTO";
 
 export type AuthContextDataProps = {
   user: UserDTO;
@@ -15,7 +16,8 @@ export type AuthContextDataProps = {
   isLoading: boolean;
   isLoadingUserStorageData: boolean;
   apiarys: ApiaryDTO[];
-  hive: string[];
+  hive: HiveDTO[];
+  setHive: React.Dispatch<React.SetStateAction<HiveDTO[]>>;
   fetchApiarys: () => Promise<void>;
   setApiarys: React.Dispatch<React.SetStateAction<ApiaryDTO[]>>;
   isLoadingApiarys: boolean;
@@ -36,7 +38,7 @@ export function AuthContextProvider({ children }: AuthContextProviderProps) {
   const [isLoadingApiarys, setIsLoadingApiarys] = useState(true);
 
   const [apiarys, setApiarys] = useState<ApiaryDTO[]>([]);
-  const [hive, setHive] = useState<string[]>([])
+  const [hive, setHive] = useState<HiveDTO[]>([])
 
 
   const [user, setUser] = useState<UserDTO>({} as UserDTO);
@@ -226,32 +228,8 @@ export function AuthContextProvider({ children }: AuthContextProviderProps) {
     }
   }
 
-  // async function fetchHiveByApiarys() {
-  //   try{
-  //     const response = await api.get(`/apiarios/${apiarys[0].id}/colmeias`);
-  //     setHive(response.data);	
-      
-  //   } catch (error: any) {
-  //     if (error.response && error.response.data && error.response.data.mensagem) {
-
-  //       toast.show({
-  //         title: error.response.data.mensagem,
-  //         placement: 'top',
-  //         bgColor: 'red.500',
-  //       });
-  //     } else {
-
-  //       toast.show({
-  //         title: 'Ocorreu um erro no servidor.',
-  //         placement: 'top',
-  //         bgColor: 'red.500',
-  //       });
-  //     }
-  //   }
-  // }
-
   return (
-    <AuthContext.Provider value={{ user, singIn, isLoading, isLoadingUserStorageData, singOut, apiarys, hive, fetchApiarys, setApiarys, isLoadingApiarys, handleDeleteUser, updateUserProfile }}>
+    <AuthContext.Provider value={{ user, singIn, isLoading, isLoadingUserStorageData, singOut, apiarys, hive, setHive, fetchApiarys, setApiarys, isLoadingApiarys, handleDeleteUser, updateUserProfile }}>
       {children}
     </AuthContext.Provider>
   )
