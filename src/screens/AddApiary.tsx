@@ -37,7 +37,6 @@ export function AddApiary() {
     try {
       setIsLoading(true);
       const response = await api.post('/apiarios', data);
-      console.log(response.data);
 
       if (response.status === 201) {
         setApiarys([...apiarys, response.data]);

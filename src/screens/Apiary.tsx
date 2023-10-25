@@ -21,7 +21,7 @@ export function Apiary() {
   const route = useRoute();
   const [showLoading, setShowLoading] = useState(true);
 
-  const { apiarys, fetchApiarys, user, isLoadingApiarys } = useAuth();
+  const { apiarys, fetchApiarys, user, isLoadingApiarys, hive } = useAuth();
 
   const [loading, setLoading] = useState(true);
   const isFocused = useIsFocused();
@@ -45,11 +45,9 @@ export function Apiary() {
   }
 
   useEffect(() => {
-    if (isFocused) {
-      fetchApiarys();
-      setShowLoading(true);
-    }
-  }, [isFocused, setShowLoading]);
+    fetchApiarys();
+    setShowLoading(true);
+  }, []);
 
   return (
     <VStack flex={1}>
@@ -109,6 +107,7 @@ export function Apiary() {
             renderItem={({ item }) => (
               <ApiaryItem
                 key={item.id}
+                numberHives={hive.length}
                 data={item}
                 onPress={() => handleOpenApiaryDetails(item.id)}
               />

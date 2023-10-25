@@ -23,6 +23,7 @@ import { HiveItem } from "../components/HiveItem";
 import { useAuth } from "../hooks/useAuth";
 import { api } from "../services/api";
 import { ApiaryDTO } from "../dtos/ApiaryDTO";
+import { HiveDTO } from "../dtos/HiveDTO";
 
 type RouteParamsProps = {
   apiaryID: number;
@@ -36,7 +37,7 @@ export function ApiaryDetails() {
   const navigation = useNavigation<AppNavigatorRoutesProps>();
 
   const { apiarys, hive, setApiarys, setHive } = useAuth();
-
+  console.log(apiaryData)
   const route = useRoute();
   const toast = useToast();
 
@@ -75,30 +76,41 @@ export function ApiaryDetails() {
       setIsLoading(false);
     }
   }
+  async function createHive(data: number) {
+    try {
+      setIsLoading(true);
+      const response = await api.post(`/colmeias`, { apiarioId: data});
+      if(response.status === 201) {
+        setHive([...hive, response.data]);
+        console.log(response.data)
+        toast.show({
+          title: 'Colmeia criada com sucesso!',
+          placement: 'top',
+          bgColor: 'green.500',
+        });
+      } 
 
-    // async function fetchHiveByApiarys() {
-  //   try{
-  //     const response = await api.get(`/colmeias?apiarioId=0`);
-  //     setHive(response.data);	
-      
-  //   } catch (error: any) {
-  //     if (error.response && error.response.data && error.response.data.mensagem) {
 
-  //       toast.show({
-  //         title: error.response.data.mensagem,
-  //         placement: 'top',
-  //         bgColor: 'red.500',
-  //       });
-  //     } else {
+    } catch (error: any) {
+      if (error.response && error.response.data && error.response.data.mensagem) {
 
-  //       toast.show({
-  //         title: 'Ocorreu um erro no servidor.',
-  //         placement: 'top',
-  //         bgColor: 'red.500',
-  //       });
-  //     }
-  //   }
-  // }
+        toast.show({
+          title: error.response.data.mensagem,
+          placement: 'top',
+          bgColor: 'yellow.700',
+        });
+      } else {
+
+        toast.show({
+          title: 'Ocorreu um erro no servidor.',
+          placement: 'top',
+          bgColor: 'red.500',
+        });
+      }
+    } finally {
+      setIsLoading(false);
+    }
+  }
 
   function handleOpenApiaryDetails() {
     navigation.navigate('Hive');
@@ -117,7 +129,7 @@ export function ApiaryDetails() {
 
   return (
     <VStack flex={1}>
-      <VStack px={isVertical ? 8 : 32} bg="GREEN" pt={isVertical ? 12 : 4} rounded="xl">
+      <VStack px={isVertical ? 8 : 32} bg="GREEN" pt={isVertical ? 8 : 4} rounded="xl">
         <HStack alignItems="center" justifyContent="space-between">
           <TouchableOpacity onPress={handleGoBack}>
             <Icon as={Feather} name="arrow-left" size={8} color="gray.700" />
@@ -125,10 +137,10 @@ export function ApiaryDetails() {
           <Heading fontFamily="heading" fontSize="xl" flexShrink={1}>
             Colmeia(s)
           </Heading>
-          <Center my={5}>
+          <Center my={4}>
 
             <TouchableOpacity
-              onPress={() => { }}
+              onPress={() => createHive(apiaryID)}
               style={{
                 borderWidth: 2,
                 borderColor: "gray",
@@ -156,7 +168,7 @@ export function ApiaryDetails() {
             flex={1}
             alignItems="center"
             justifyContent="space-between"
-            mb={4}
+            mb={6}
           >
             <Text textTransform="capitalize" fontSize="md">
               Apiário:{' '}
@@ -172,37 +184,49 @@ export function ApiaryDetails() {
             </Text>
             <Text fontSize="lg" ml={2}>
               Total Colmeias: {' '}
+                {isLoading ? (
+                  <HStack space={8} flex={1} justifyContent="center" alignItems="center">
+                    <Spinner color="emerald.500" size="sm" />
+                  </HStack> 
+                ) :
               <Text fontFamily="heading">
-                {hive.length< 10 ? `0${hive.length}` : hive.length}
+                 <Text fontFamily="heading">
+                   {hive.length < 10 ? `0${hive.length}` : hive.length}
+                 </Text>
               </Text>
+                }
             </Text>
           </HStack>
         </HStack>
       </VStack>
-      {isLoading ? (
-        <HStack space={8} flex={1} justifyContent="center" alignItems="center">
-          <Spinner color="emerald.500" size="lg" />
-        </HStack> 
-      ) :
-      <FlatList
-        px={8}
-        data={hive}
-        keyExtractor={(item) => item.id.toString()}
-        renderItem={({ item }) => (
-          <HiveItem
-            onPress={() => handleOpenApiaryDetails}
-            data={item}
+      <VStack px={isVertical ? 0 : 20}>
+
+        {isLoading ? (
+          <HStack space={8} pt={32} flex={1} justifyContent="center" alignItems="center">
+            <Spinner color="emerald.500" size="lg" />
+          </HStack> 
+        ) :
+        <FlatList
+          px={8}
+          py={4}
+          data={hive}
+          keyExtractor={(item) => item.id.toString()}
+          renderItem={({ item }) => (
+            <HiveItem
+              onPress={() => handleOpenApiaryDetails}
+              data={item}
+            />
+          )}
+          showsVerticalScrollIndicator={false}
+          _contentContainerStyle={{ pb: 10 }}
+          contentContainerStyle={hive.length === 0 &&  { flex: 1, justifyContent: "center" }}
+          ListEmptyComponent={() => (
+            <Text fontSize="lg" textAlign="center">Nenhuma Colmeia cadastrada</Text>
+            )
+          }
           />
-        )}
-        showsVerticalScrollIndicator={false}
-        _contentContainerStyle={{ pb: 10 }}
-        contentContainerStyle={hive.length === 0 &&  { flex: 1, justifyContent: "center" }}
-        ListEmptyComponent={() => (
-          <Text fontSize="lg" textAlign="center">Nenhuma Colmeia cadastrada</Text>
-        )
         }
-      />
-      }
+      </VStack>
     </VStack>
   );
 }

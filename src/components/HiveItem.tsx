@@ -12,17 +12,18 @@ export function HiveItem({ data, ...rest }: Props) {
   return (
     <TouchableOpacity {...rest}>
       <HStack
-        bg="gray.100"
+        bg="gray.600"
         alignItems="center"
-        p={2}
+        px={4}
+        py={2}
         pr={4}
         rounded="md"
-        my={3}
+        my={2}
       >
         <VStack flex={1}>
-          <Heading fontSize="lg">Numero da Colmeia: 0{data.numero}</Heading>
+          <Heading fontSize="lg" color="gray.100">Colmeia N°: 0{data.numero}</Heading>
         </VStack>
-        <Icon as={<Entypo name="chevron-right" />} size="lg" />
+        <Icon as={<Entypo name="chevron-right" />} color="gray.100" size="lg" />
       </HStack>
     </TouchableOpacity>
   );
