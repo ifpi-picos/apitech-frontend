@@ -10,6 +10,9 @@ import {
   FlatList,
   useToast,
   Spinner,
+  Flex,
+  Box,
+  Stack,
 } from "native-base";
 import { Center } from "native-base";
 import { Entypo } from "@expo/vector-icons";
@@ -33,6 +36,7 @@ export function ApiaryDetails() {
   const [isLoading, setIsLoading] = useState(true);
   const [apiaryData, setApiaryData] = useState<ApiaryDTO>({} as ApiaryDTO);
   const [hideData, setHideData] = useState<ApiaryDTO>({} as ApiaryDTO);
+  const [showLoading, setShowLoading] = useState(true);
 
   const navigation = useNavigation<AppNavigatorRoutesProps>();
 
@@ -40,6 +44,10 @@ export function ApiaryDetails() {
   console.log(apiaryData)
   const route = useRoute();
   const toast = useToast();
+
+  const loadMoreItems = () => {
+    setShowLoading(false);
+  };
 
 
   const { apiaryID } = route.params as RouteParamsProps;
@@ -153,7 +161,7 @@ export function ApiaryDetails() {
             >
               <HStack justifyContent="center" alignItems="center">
                 <Icon as={Entypo} name="plus" color="gray.700" size={8} />
-                {isVertical ? <></> : <Heading fontSize="lg">Adicionar Colmeia</Heading>}
+                {isVertical ? <></> : <Heading fontSize="lg">Criar Colmeia</Heading>}
               </HStack>
             </TouchableOpacity>
 
@@ -168,7 +176,7 @@ export function ApiaryDetails() {
             flex={1}
             alignItems="center"
             justifyContent="space-between"
-            mb={6}
+            mb={4}
           >
             <Text textTransform="capitalize" fontSize="md">
               Apiário:{' '}
@@ -199,14 +207,53 @@ export function ApiaryDetails() {
           </HStack>
         </HStack>
       </VStack>
-      <VStack px={isVertical ? 0 : 20}>
+      <VStack pb={40} px={isVertical ? 0 : 20}>
 
         {isLoading ? (
           <HStack space={8} pt={32} flex={1} justifyContent="center" alignItems="center">
             <Spinner color="emerald.500" size="lg" />
           </HStack> 
         ) :
-        <FlatList
+          <FlatList
+              px={8}
+              py={4}
+              pb={32}
+              data={hive}
+              keyExtractor={(item) => item.id.toString()}
+              renderItem={({ item }) => (
+                <HiveItem
+                  onPress={() => handleOpenApiaryDetails}
+                  data={item}
+                  key={item.id}
+                />
+
+              )}
+              showsVerticalScrollIndicator={false}
+              onEndReached={loadMoreItems}
+              onEndReachedThreshold={0.1}
+              _contentContainerStyle={{ pb: 10 }}
+              contentContainerStyle={hive.length === 0 && { flex: 1, justifyContent: "center" }}
+              ListFooterComponent={() => (
+                showLoading ? (
+                  <HStack space={2} justifyContent="center">
+                    <Spinner accessibilityLabel="Loading posts" />
+                    <Heading color="emerald.500" fontSize="md">
+                      Carregando
+                    </Heading>
+                  </HStack>
+                ) : null
+              )}
+              ListEmptyComponent={() => (
+                <Text fontSize="lg" textAlign="center">Nenhuma Colmeia cadastrada</Text>
+              )}
+            />
+        }
+      </VStack>
+    </VStack>
+  );
+}
+
+{/* <FlatList
           px={8}
           py={4}
           data={hive}
@@ -215,18 +262,15 @@ export function ApiaryDetails() {
             <HiveItem
               onPress={() => handleOpenApiaryDetails}
               data={item}
+              key={item.id}
             />
+
           )}
           showsVerticalScrollIndicator={false}
-          _contentContainerStyle={{ pb: 10 }}
+          _contentContainerStyle={{ pb: 10, display: "flex", flexDirection: "row", gap: 4, flexWrap: "wrap", justifyContent: "space-evenly"}}
           contentContainerStyle={hive.length === 0 &&  { flex: 1, justifyContent: "center" }}
           ListEmptyComponent={() => (
             <Text fontSize="lg" textAlign="center">Nenhuma Colmeia cadastrada</Text>
             )
           }
-          />
-        }
-      </VStack>
-    </VStack>
-  );
-}
+          /> */}

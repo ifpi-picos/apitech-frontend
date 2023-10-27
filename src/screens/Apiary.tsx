@@ -107,7 +107,6 @@ export function Apiary() {
             renderItem={({ item }) => (
               <ApiaryItem
                 key={item.id}
-                numberHives={hive.length}
                 data={item}
                 onPress={() => handleOpenApiaryDetails(item.id)}
               />
@@ -119,9 +118,11 @@ export function Apiary() {
             contentContainerStyle={apiarys.length === 0 && { flex: 1, justifyContent: "center" }}
             ListFooterComponent={() => (
               showLoading ? (
-                <HStack space={8} justifyContent="center" alignItems="center">
-                  <Spinner color="emerald.500" size="lg" />
-                  <Text>Carregando...</Text>
+                <HStack space={2} justifyContent="center">
+                  <Spinner accessibilityLabel="Loading posts" />
+                  <Heading color="emerald.500" fontSize="md">
+                    Carregando
+                  </Heading>
                 </HStack>
               ) : null
             )}
