@@ -23,7 +23,9 @@ type AppRoutes = {
   Apiario_Detalhes:  {
     apiaryID: number;
   };
-  Hive: undefined;
+  Hive: {
+    hiveID: number;
+  };
   Adicionando_Apiario:  {
     usuarioId: number;
   };

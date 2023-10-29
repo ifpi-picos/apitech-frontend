@@ -41,7 +41,7 @@ export function ApiaryDetails() {
   const navigation = useNavigation<AppNavigatorRoutesProps>();
 
   const { apiarys, hive, setApiarys, setHive } = useAuth();
-  console.log(apiaryData)
+
   const route = useRoute();
   const toast = useToast();
 
@@ -61,9 +61,6 @@ export function ApiaryDetails() {
       setIsLoading(true);
       const response = await api.get(`/colmeias?apiarioId=${apiaryID}`);
       setHive(response.data);
-      console.log(response.data);
-
-
     } catch (error: any) {
       if (error.response && error.response.data && error.response.data.mensagem) {
 
@@ -120,8 +117,9 @@ export function ApiaryDetails() {
     }
   }
 
-  function handleOpenApiaryDetails() {
-    navigation.navigate('Hive');
+
+  function handleOpenHiveDetails(hiveID: number) {
+    navigation.navigate('Hive', { hiveID });
   }
   const windowDimensions = useWindowDimensions();
   const isVertical = windowDimensions.height > windowDimensions.width; // Verifica se a orientação é vertical
@@ -222,7 +220,7 @@ export function ApiaryDetails() {
               keyExtractor={(item) => item.id.toString()}
               renderItem={({ item }) => (
                 <HiveItem
-                  onPress={() => handleOpenApiaryDetails}
+                  onPress={() => handleOpenHiveDetails(item.id)}
                   data={item}
                   key={item.id}
                 />

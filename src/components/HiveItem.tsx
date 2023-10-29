@@ -19,7 +19,7 @@ export function HiveItem({ data, ...rest }: Props) {
       marginBottom: 10,
       backgroundColor: '#2e2d2d',
     }}>
-        <HStack px={3} py={4} width="100%" justifyContent="space-evenly" alignItems="center">
+        <HStack px={3} py={2} width="100%" justifyContent="space-evenly" alignItems="center">
           <Text fontSize="xl" color="gray.100" mr={4}>
             Colmeia
           </Text>
