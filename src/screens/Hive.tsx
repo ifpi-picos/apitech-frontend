@@ -1,4 +1,4 @@
-import { Flex, Center, VStack, Radio, Text, HStack, Icon, Heading, Spinner } from "native-base";
+import { Flex, Center, VStack, Radio, Text, HStack, Icon, Heading, Spinner, Box, Divider } from "native-base";
 import { useEffect, useState } from "react";
 import { ScrollView, TouchableOpacity, useWindowDimensions } from "react-native";
 import { Entypo } from "@expo/vector-icons";
@@ -38,14 +38,14 @@ export function Hive() {
 
     return (
       <VStack>
-        <VStack px={isVertical ? 8 : 32} bg="GREEN" pt={isVertical ? 8 : 4} rounded="xl">
-          <HStack alignItems="center" py={4} justifyContent="space-between">
+        <VStack px={isVertical ? 6 : 32} bg="GREEN" pt={isVertical ? 8 : 4} rounded="xl">
+          <HStack alignItems="center" py={3} justifyContent="space-between">
             <TouchableOpacity onPress={() => handleGoBack(hiveData.apiarioId)}>
               <Icon as={Feather} name="arrow-left" size={8} color="gray.700" />
             </TouchableOpacity>
-            <Heading fontFamily="heading" fontSize="lg" flexShrink={1}>
-              Colmeia N°: 0{hiveData.numero}
-            </Heading>
+            <Text fontSize="lg" flexShrink={1}>
+              Colmeia N°: <Heading fontFamily="heading" fontSize="xl">0{hiveData.numero}</Heading>
+            </Text>
 
           </HStack>
           <HStack
@@ -55,18 +55,77 @@ export function Hive() {
           >
 
           </HStack>
+          <Center pb={4}>
+            <Heading>Revisão da Colmeia</Heading>
+          </Center>
         </VStack>
-        <Radio.Group defaultValue="1" name="exampleGroup" accessibilityLabel="favorite colorscheme">
-          <Radio colorScheme="emerald" value="1" my={1}>
-            emerald
-          </Radio>
-          <Radio colorScheme="secondary" value="2" my={2}>
-            secondary
-          </Radio>
-          <Radio colorScheme="warning" value="3" my={1}>
-            warning
-          </Radio>
-        </Radio.Group>
+
+        <ScrollView>
+        <Center>
+          <Box my={4} mx={2} bg="gray.100" borderWidth={1} borderColor={"GREEN"} borderBottomRadius={10}>
+            <Center py={1}  backgroundColor="BEIGE">
+              <Text fontSize="lg" fontWeight="bold" textAlign="center">Localização de Crias Novas e Ovos</Text>
+            </Center>
+            <Text fontSize="lg" fontWeight="bold" pt={2} pl={4}>Cria Localizada:</Text>
+            <Radio.Group style={{ flexDirection: "row", width: "100%" , alignItems: "center", justifyContent: "space-evenly", flexWrap: "wrap" }} defaultValue="1" name="criaLocalizada" accessibilityLabel="favorite colorscheme">
+              
+              <Radio colorScheme="emerald" size="lg" value="1" my={1}>
+                Não
+              </Radio>
+              <Radio colorScheme="emerald" size="lg" value="2" my={1}>
+                Sim
+              </Radio>
+              <Radio colorScheme="emerald" size="lg" value="3" my={1}>
+                Verificação não possivel
+              </Radio>
+              <Radio colorScheme="emerald" size="lg" value="4" my={1}>
+                Não havia crias
+              </Radio>
+            </Radio.Group>
+            <Center px={4}>
+              <Divider justifyContent="center" my={2} w="100%"  bg="GREEN" />
+            </Center>
+            <Text fontSize="lg" fontWeight="bold" pt={2} pl={4}>Quantidade de Cria</Text>
+            <Radio.Group 
+              style={{ flexDirection: "row", width: "100%" , alignItems: "center", justifyContent: "space-evenly", flexWrap: "wrap" }} 
+              defaultValue="1" 
+              name="quantidadeDeCria" 
+              accessibilityLabel="favorite colorscheme">
+              
+              <Radio colorScheme="emerald" size="lg" value="1" my={1}>
+                Sem Cria
+              </Radio>
+              <Radio colorScheme="emerald" size="lg" value="2" my={1}>
+                Pouca Cria
+              </Radio>
+              <Radio colorScheme="emerald" size="lg" value="3" my={1}>
+                Muita Cria
+              </Radio>
+            </Radio.Group>
+            <Center px={4}>
+              <Divider justifyContent="center" my={2} w="100%"  bg="GREEN" />
+            </Center>
+            <Text fontSize="lg" fontWeight="bold" pt={2} pl={4}>Estado da Cria Nova</Text>
+            <Radio.Group 
+              style={{ flexDirection: "row", width: "100%" , alignItems: "center", justifyContent: "space-evenly", flexWrap: "wrap" }} 
+              defaultValue="1" 
+              name="estadoDaCriaNova" 
+              accessibilityLabel="favorite colorscheme">
+              
+              <Radio colorScheme="emerald" size="lg" value="1" my={1}>
+                Cria em Ovos
+              </Radio>
+              <Radio colorScheme="emerald" size="lg" value="2" my={1}>
+                Cria em Pupas
+              </Radio>
+              <Radio colorScheme="emerald" size="lg" value="3" my={1}>
+                Cria em Ovos e Pupas
+              </Radio>
+            </Radio.Group>
+          </Box>
+          
+        </Center>
+        </ScrollView>
       </VStack>
         //   <>
       //    <Flex justifyContent={"justify"} alignItems={"center"}>
