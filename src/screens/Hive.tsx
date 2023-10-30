@@ -7,6 +7,7 @@ import { useAuth } from "../hooks/useAuth";
 import { HiveDTO } from "../dtos/HiveDTO";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import { AppNavigatorRoutesProps } from "../routes/app.routes";
+import { Button } from "../components/Button";
 
 type RouteParamsProps = {
   hiveID: number;
@@ -37,8 +38,8 @@ export function Hive() {
   }, [hiveID]);
 
     return (
-      <VStack>
-        <VStack px={isVertical ? 6 : 32} bg="GREEN" pt={isVertical ? 8 : 4} rounded="xl">
+      <VStack flex={1}>
+        <VStack px={isVertical ? 6 : 32} bg="GREEN" pt={isVertical ? 16 : 4} rounded="xl">
           <HStack alignItems="center" py={3} justifyContent="space-between">
             <TouchableOpacity onPress={() => handleGoBack(hiveData.apiarioId)}>
               <Icon as={Feather} name="arrow-left" size={8} color="gray.700" />
@@ -56,18 +57,18 @@ export function Hive() {
 
           </HStack>
           <Center pb={4}>
-            <Heading>Revisão da Colmeia</Heading>
+            <Heading fontSize="xl">Revisão da Colmeia</Heading>
           </Center>
         </VStack>
 
-        <ScrollView>
-        <Center>
+        <ScrollView >
+        <Center mb={12}>
           <Box my={4} mx={2} bg="gray.100" borderWidth={1} borderColor={"GREEN"} borderBottomRadius={10}>
-            <Center py={1}  backgroundColor="BEIGE">
+            <Center py={1}  backgroundColor="GREEN">
               <Text fontSize="lg" fontWeight="bold" textAlign="center">Localização de Crias Novas e Ovos</Text>
             </Center>
             <Text fontSize="lg" fontWeight="bold" pt={2} pl={4}>Cria Localizada:</Text>
-            <Radio.Group style={{ flexDirection: "row", width: "100%" , alignItems: "center", justifyContent: "space-evenly", flexWrap: "wrap" }} defaultValue="1" name="criaLocalizada" accessibilityLabel="favorite colorscheme">
+            <Radio.Group style={{ flexDirection: "row", width: "100%" , alignItems: "center", justifyContent: "space-evenly", flexWrap: "wrap" }} defaultValue="1" name="novasCriaLocalizada" accessibilityLabel="favorite colorscheme">
               
               <Radio colorScheme="emerald" size="lg" value="1" my={1}>
                 Não
@@ -93,13 +94,10 @@ export function Hive() {
               accessibilityLabel="favorite colorscheme">
               
               <Radio colorScheme="emerald" size="lg" value="1" my={1}>
-                Sem Cria
+                Poucas Crias
               </Radio>
               <Radio colorScheme="emerald" size="lg" value="2" my={1}>
-                Pouca Cria
-              </Radio>
-              <Radio colorScheme="emerald" size="lg" value="3" my={1}>
-                Muita Cria
+                Muitas Crias
               </Radio>
             </Radio.Group>
             <Center px={4}>
@@ -123,139 +121,219 @@ export function Hive() {
               </Radio>
             </Radio.Group>
           </Box>
+
+          <Box my={4} mx={2} bg="gray.100" borderWidth={1} borderColor={"GREEN"} borderBottomRadius={10}>
+            <Center py={1}  backgroundColor="GREEN">
+              <Text fontSize="lg" fontWeight="bold" textAlign="center">Localização de Crias Maduras</Text>
+            </Center>
+            <Text fontSize="lg" fontWeight="bold" pt={2} pl={4}>Cria Localizada:</Text>
+            <Radio.Group style={{ flexDirection: "row", width: "100%" , alignItems: "center", justifyContent: "space-evenly", flexWrap: "wrap" }} defaultValue="1" name="criaMadurasLocalizada" accessibilityLabel="favorite colorscheme">
+              
+              <Radio colorScheme="emerald" size="lg" value="1" my={1}>
+                Não
+              </Radio>
+              <Radio colorScheme="emerald" size="lg" value="2" my={1}>
+                Sim
+              </Radio>
+              <Radio colorScheme="emerald" size="lg" value="3" my={1}>
+                Verificação não possivel
+              </Radio>
+              <Radio colorScheme="emerald" size="lg" value="4" my={1}>
+                Não havia crias
+              </Radio>
+            </Radio.Group>
+            <Center px={4}>
+              <Divider justifyContent="center" my={2} w="100%"  bg="GREEN" />
+            </Center>
+            <Text fontSize="lg" fontWeight="bold" pt={2} pl={4}>Quantidade de Cria</Text>
+            <Radio.Group 
+              style={{ flexDirection: "row", width: "100%" , alignItems: "center", justifyContent: "space-evenly", flexWrap: "wrap" }} 
+              defaultValue="1" 
+              name="quantidadeDeCriaMaduras" 
+              accessibilityLabel="favorite colorscheme">
+              
+              <Radio colorScheme="emerald" size="lg" value="1" my={1}>
+                Poucas Crias
+              </Radio>
+              <Radio colorScheme="emerald" size="lg" value="2" my={1}>
+                Muitas Crias
+              </Radio>
+            </Radio.Group>
+            <Center px={4}>
+              <Divider justifyContent="center" my={2} w="100%"  bg="GREEN" />
+            </Center>
+            <Text fontSize="lg" fontWeight="bold" pt={2} pl={4}>Estado das Crias Maduras:</Text>
+            <Radio.Group style={{ flexDirection: "row", width: "100%" , alignItems: "center", justifyContent: "space-evenly", flexWrap: "wrap" }} defaultValue="1" name="estadoDasCriasMaduras" accessibilityLabel="favorite colorscheme">
+              
+              <Radio colorScheme="emerald" size="lg" value="1" my={1}>
+                Maduras Escuras
+              </Radio>
+              <Radio colorScheme="emerald" size="lg" value="2" my={1}>
+                Maduras Claras
+              </Radio>
+              <Radio colorScheme="emerald" size="lg" value="3" my={1}>
+                Maduras Claras e Escuras
+              </Radio>
+            </Radio.Group>
+          </Box>
+
+          <Box my={4} mx={2} bg="gray.100" borderWidth={1} borderColor={"GREEN"} borderBottomRadius={10}>
+            <Center py={1}  backgroundColor="GREEN">
+              <Text fontSize="lg" fontWeight="bold" textAlign="center">Localização de Mel no Ninho </Text>
+            </Center>
+            <Text fontSize="lg" fontWeight="bold" pt={2} pl={4}>Mel Localizado:</Text>
+            <Radio.Group style={{ flexDirection: "row", width: "100%" , alignItems: "center", justifyContent: "space-evenly", flexWrap: "wrap" }} defaultValue="1" name="melLocalizado" accessibilityLabel="favorite colorscheme">
+              
+              <Radio colorScheme="emerald" size="lg" value="1" my={1}>
+                Não
+              </Radio>
+              <Radio colorScheme="emerald" size="lg" value="2" my={1}>
+                Sim
+              </Radio>
+              <Radio colorScheme="emerald" size="lg" value="3" my={1}>
+                Verificação não possivel
+              </Radio>
+              <Radio colorScheme="emerald" size="lg" value="4" my={1}>
+                Não havia Mel
+              </Radio>
+            </Radio.Group>
+            <Center px={4}>
+              <Divider justifyContent="center" my={2} w="100%"  bg="GREEN" />
+            </Center>
+            <Text fontSize="lg" fontWeight="bold" pt={2} pl={4}>Quantidade de Mel</Text>
+            <Radio.Group 
+              style={{ flexDirection: "row", width: "100%" , alignItems: "center", justifyContent: "space-evenly", flexWrap: "wrap" }} 
+              defaultValue="1" 
+              name="quantidadeDeMel" 
+              accessibilityLabel="favorite colorscheme">
+              
+              <Radio colorScheme="emerald" size="lg" value="1" my={1}>
+                Muito Mel no Ninho
+              </Radio>
+              <Radio colorScheme="emerald" size="lg" value="2" my={1}>
+                Pouco Mel no Ninho
+              </Radio>
+            </Radio.Group>
+            <Center px={4}>
+              <Divider justifyContent="center" my={2} w="100%"  bg="GREEN" />
+            </Center>
+            <Text fontSize="lg" fontWeight="bold" pt={2} pl={4}>Estado do Mel:</Text>
+            <Radio.Group style={{ flexDirection: "row", width: "100%" , alignItems: "center", justifyContent: "space-evenly", flexWrap: "wrap" }} defaultValue="1" name="estadoDoMel" accessibilityLabel="favorite colorscheme">
+              
+              <Radio colorScheme="emerald" size="lg" value="1" my={1}>
+                Mel Maduro no Ninho
+              </Radio>
+              <Radio colorScheme="emerald" size="lg" value="2" my={1}>
+                Mel Verde no Ninho
+              </Radio>
+              <Radio colorScheme="emerald" size="lg" value="3" my={1}>
+                Mel Maduro e Verde no Ninho
+              </Radio>
+            </Radio.Group>
+          </Box>
+
+          <Box my={4} mx={2} bg="gray.100" borderWidth={1} borderColor={"GREEN"} borderBottomRadius={10}>
+            <Center py={1}  backgroundColor="GREEN">
+              <Text fontSize="lg" fontWeight="bold" textAlign="center">Localização de Pólen no Ninho </Text>
+            </Center>
+            <Text fontSize="lg" fontWeight="bold" pt={2} pl={4}>Pólen Localizado:</Text>
+            <Radio.Group style={{ flexDirection: "row", width: "100%" , alignItems: "center", justifyContent: "space-evenly", flexWrap: "wrap" }} defaultValue="1" name="polenLocalizado" accessibilityLabel="favorite colorscheme">
+              
+              <Radio colorScheme="emerald" size="lg" value="1" my={1}>
+                Não
+              </Radio>
+              <Radio colorScheme="emerald" size="lg" value="2" my={1}>
+                Sim
+              </Radio>
+              <Radio colorScheme="emerald" size="lg" value="3" my={1}>
+                Verificação não possivel
+              </Radio>
+              <Radio colorScheme="emerald" size="lg" value="4" my={1}>
+                Não havia Pólen
+              </Radio>
+            </Radio.Group>
+            <Center px={4}>
+              <Divider justifyContent="center" my={2} w="100%"  bg="GREEN" />
+            </Center>
+            <Text fontSize="lg" fontWeight="bold" pt={2} pl={4}>Quantidade de Pólen</Text>
+            <Radio.Group 
+              style={{ flexDirection: "row", width: "100%" , alignItems: "center", justifyContent: "space-evenly", flexWrap: "wrap" }} 
+              defaultValue="1" 
+              name="quantidadeDePolen" 
+              accessibilityLabel="favorite colorscheme">
+              
+              <Radio colorScheme="emerald" size="lg" value="1" my={1}>
+                Muito Pólen no Ninho
+              </Radio>
+              <Radio colorScheme="emerald" size="lg" value="2" my={1}>
+                Pouco Pólen no Ninho
+              </Radio>
+            </Radio.Group>
+          </Box>
+
+          <Box my={4} mx={2} bg="gray.100" borderWidth={1} borderColor={"GREEN"} borderBottomRadius={10}>
+            <Center py={1}  backgroundColor="GREEN">
+              <Text fontSize="lg" fontWeight="bold" textAlign="center">Localização da Rainha </Text>
+            </Center>
+            <Text fontSize="lg" fontWeight="bold" pt={2} pl={4}>Rainha Localizada:</Text>
+            <Radio.Group style={{ flexDirection: "row", width: "100%" , alignItems: "center", justifyContent: "space-evenly", flexWrap: "wrap" }} defaultValue="1" name="rainhaLocalizada" accessibilityLabel="favorite colorscheme">
+              
+              <Radio colorScheme="emerald" size="lg" value="1" my={1}>
+                Não
+              </Radio>
+              <Radio colorScheme="emerald" size="lg" value="2" my={1}>
+                Sim
+              </Radio>
+              <Radio colorScheme="emerald" size="lg" value="3" my={1}>
+                Verificação não possivel
+              </Radio>
+              <Radio colorScheme="emerald" size="lg" value="4" my={1}>
+                Não havia Rainha
+              </Radio>
+            </Radio.Group>
+            <Center px={4}>
+              <Divider justifyContent="center" my={2} w="100%"  bg="GREEN" />
+            </Center>
+            <Text fontSize="lg" fontWeight="bold" pt={2} pl={4}>Idade da Rainha</Text>
+            <Radio.Group 
+              style={{ flexDirection: "row", width: "100%" , alignItems: "center", justifyContent: "space-evenly", flexWrap: "wrap" }} 
+              defaultValue="1" 
+              name="idadeDaRainha" 
+              accessibilityLabel="favorite colorscheme">
+              
+              <Radio colorScheme="emerald" size="lg" value="1" my={1}>
+                Rainha com Idade Conhecida
+              </Radio>
+              <Radio colorScheme="emerald" size="lg" value="2" my={1}>
+                Rainha com Idade Desconhecida
+              </Radio>
+            </Radio.Group>
+            <Center px={4}>
+              <Divider justifyContent="center" my={2} w="100%"  bg="GREEN" />
+            </Center>
+            <Text fontSize="lg" fontWeight="bold" pt={2} pl={4}>Estado da Rainha:</Text>
+            <Radio.Group style={{ flexDirection: "row", width: "100%" , alignItems: "center", justifyContent: "space-evenly", flexWrap: "wrap" }} defaultValue="1" name="estadoDaRainha" accessibilityLabel="favorite colorscheme">
+              
+              <Radio colorScheme="emerald" size="lg" value="1" my={1}>
+                Rainha Jovem Saudável
+              </Radio>
+              <Radio colorScheme="emerald" size="lg" value="2" my={1}>
+                Rainha Jovem Aspecto Mediano
+              </Radio>
+              <Radio colorScheme="emerald" size="lg" value="3" my={1}>
+                Rainha Velha Aspecto Não Saudável
+              </Radio>
+            </Radio.Group>
+          </Box>
+            <Button
+              title="Salvar Revisão"
+              w="80%"
+
+            >
+            </Button>
           
         </Center>
         </ScrollView>
       </VStack>
-        //   <>
-      //    <Flex justifyContent={"justify"} alignItems={"center"}>
-      //   <Text fontSize={"xl"} fontFamily={"heading"} paddingX={20}>Revisão das Colmeias</Text>
-      //   <Text left={100}>Numero da Colmeia:</Text>
-      // </Flex>
-      // <Center>
-      //   <ScrollView>
-
-      //   <VStack space={3} bgColor={"GREEN"} h={390} w={350} borderRadius={12}>
-      //     <Text fontSize={"xl"} fontFamily={"heading"} justifyContent={"center"} alignItems={"center"}>Localização criar novas e ovos</Text>
-      //     <Center borderColor={" BLACK"} bgColor={"WHITE"}>
-      //        <Radio.Group flexDirection={"column"}>
-      //           <Text right={50} fontFamily={"heading"}>Cria localizada</Text>
-      //           <Radio value="Não">Não</Radio>
-      //           <Radio value="Sim">Sim</Radio>
-      //           <Radio value="Verificação não possivel">Verificação não possivel</Radio>
-      //           <Radio value="Não havia crias">Não havia crias</Radio>
-      //        </Radio.Group>
-      //     </Center>
-      //     <Center  bgColor={"WHITE"} >
-      //     <Radio.Group flexDirection={"column"}>
-      //           <Text right={77} fontFamily={"heading"}>Quantidade de cria</Text>
-      //           <Radio value="Sem cria">Sem cria</Radio>
-      //           <Radio value="Pouca cria">Pouca cria</Radio>
-      //           <Radio value="Muita cria">Muita cria</Radio>
-      //        </Radio.Group>
-      //     </Center>
-      //     <Center borderColor={" BLACK"}  bgColor={"WHITE"}>
-      //      <Radio.Group flexDirection={"column"}>
-      //           <Text right={50} fontFamily={"heading"}>Estado da cria  nova</Text>
-      //           <Radio value="Cria em ovos">Cria em ovos</Radio>
-      //           <Radio value="Cria em pupas">Cria em pupas</Radio>
-      //           <Radio value="Cria em ovos e pupas">Cria em ovovos e pupas</Radio>
-      //        </Radio.Group>
-      //     </Center>
-      //   </VStack>
-
-      //     <VStack space={3} bgColor={"GREEN"} h={140} w={350} borderRadius={12}>
-      //     <Text fontSize={"xl"} fontFamily={"heading"}>Localização de cria madura</Text>
-      //       <Center borderColor={" BLACK"} bgColor={"WHITE"} >
-      //       <Radio.Group flexDirection={"column"}>
-      //             <Text right={77} fontFamily={"heading"}>Estado da cria madura</Text>
-      //             <Radio value="Sem cria">Cria escura</Radio>
-      //             <Radio value="Pouca cria">Cria clara</Radio>
-      //             <Radio value="Muita cria">Cria escura e clara</Radio>
-      //         </Radio.Group>
-      //       </Center>
-      //     </VStack>
-
-      //     <VStack space={3} bgColor={"GREEN"} h={390} w={350} borderRadius={12}>
-      //     <Text fontSize={"xl"} fontFamily={"heading"}>Localização do mel no ninho</Text>
-      //       <Center borderColor={" BLACK"} bg={"WHITE"}>
-      //         <Radio.Group flexDirection={"column"}>
-      //             <Text right={50} fontFamily={"heading"}>Mel localizado</Text>
-      //             <Radio value="Não">Não</Radio>
-      //             <Radio value="Sim">Sim</Radio>
-      //             <Radio value="Verificação não possivel">Verificação não possivel</Radio>
-      //             <Radio value="Não havia crias">Não havia mel</Radio>
-      //         </Radio.Group>
-      //       </Center>
-      //       <Center borderColor={" BLACK"} bgColor={"WHITE"}>
-      //       <Radio.Group flexDirection={"column"}>
-      //             <Text right={50} fontFamily={"heading"}>Estado do mel</Text>
-      //             <Radio value="Cria em ovos">Mel maduro</Radio>
-      //             <Radio value="Cria em pupas">Mel verde</Radio>
-      //             <Radio value="Cria em ovos e pupas">mel maduro e verde</Radio>
-      //         </Radio.Group>
-      //       </Center>
-      //       <Center borderColor={" BLACK"} bgColor={"WHITE"} >
-      //       <Radio.Group flexDirection={"column"}>
-      //             <Text right={77} fontFamily={"heading"}>Quantidade de mel</Text>
-      //             <Radio value="Sem cria">Sem mel</Radio>
-      //             <Radio value="Pouca cria">Pouco mel</Radio>
-      //             <Radio value="Muita cria">Muito mel</Radio>
-      //         </Radio.Group>
-      //       </Center>
-      //     </VStack>
-
-      //     <VStack space={3} bgColor={"GREEN"} h={270} borderRadius={12}>
-      //     <Text fontSize={"xl"} fontFamily={"heading"}>Localização do pólen</Text>
-      //       <Center borderColor={" BLACK"} bgColor={"WHITE"} >
-      //         <Radio.Group flexDirection={"column"}>
-      //             <Text right={50} fontFamily={"heading"}>Pólen localizado</Text>
-      //             <Radio value="Não">Não</Radio>
-      //             <Radio value="Sim">Sim</Radio>
-      //             <Radio value="Verificação não possivel">Verificação não possivel</Radio>
-      //             <Radio value="Não havia crias">Não havia pólen</Radio>
-      //         </Radio.Group>
-      //       </Center>
-      //       <Center borderColor={" BLACK"} bgColor={"WHITE"}>
-      //       <Radio.Group flexDirection={"column"}>
-      //             <Text right={77} fontFamily={"heading"}>Quantidade de pólen</Text>
-      //             <Radio value="Sem cria">Não tempólen</Radio>
-      //             <Radio value="Pouca cria">Pouco pólen</Radio>
-      //             <Radio value="Muita cria">Muito pólen</Radio>
-      //         </Radio.Group>
-      //       </Center>
-      //     </VStack>
-
-      //     <VStack space={3} bgColor={"GREEN"} h={380} borderRadius={12}>
-      //     <Text fontSize={"xl"} fontFamily={"heading"}>Localização da rainha</Text>
-      //       <Center bgColor={"WHITE"}>
-      //         <Radio.Group flexDirection={"column"}>
-      //             <Text right={50} fontFamily={"heading"}>Rainha  localizada</Text>
-      //             <Radio >Não</Radio>
-      //             <Radio value="Sim">Sim</Radio>
-      //             <Radio value="Verificação não possivel">Verificação não possivel</Radio>
-      //             <Radio value="Não havia crias">Não havia rainha</Radio>
-      //         </Radio.Group>
-      //       </Center>
-      //       <Center bgColor={"WHITE"} >
-      //       <Radio.Group flexDirection={"column"}>
-      //             <Text right={42} fontFamily={"heading"}>Estado da rainha</Text>
-      //             <Radio value="Sem cria">Rainha com idade conhecida</Radio>
-      //             <Radio value="Pouca cria">Rianha com idade desconhecida</Radio>
-      //         </Radio.Group>
-      //       </Center>
-      //       <Center bgColor={"WHITE"} >
-      //       <Radio.Group flexDirection={"column"}>
-      //             <Text right={42} fontFamily={"heading"}>Aspecto da rainha</Text>
-      //             <Radio value="Cria em ovos">Rainha jovem e saúdavel</Radio>
-      //             <Radio value="Cria em pupas">Rainha jovem aspecto mediano</Radio>
-      //             <Radio value="Cria em ovos e pupas">Rainha velha não saúdavel</Radio>
-      //         </Radio.Group>
-      //       </Center>
-      //     </VStack>
-
-      //   </ScrollView>
-      // </Center> 
-      //   </>
     )
 }

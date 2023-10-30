@@ -135,7 +135,7 @@ export function ApiaryDetails() {
 
   return (
     <VStack flex={1}>
-      <VStack px={isVertical ? 8 : 32} bg="GREEN" pt={isVertical ? 8 : 4} rounded="xl">
+      <VStack px={isVertical ? 8 : 32} bg="GREEN" pt={isVertical ? 16 : 4} rounded="xl">
         <HStack alignItems="center" justifyContent="space-between">
           <TouchableOpacity onPress={handleGoBack}>
             <Icon as={Feather} name="arrow-left" size={8} color="gray.700" />
@@ -205,7 +205,7 @@ export function ApiaryDetails() {
           </HStack>
         </HStack>
       </VStack>
-      <VStack pb={40} px={isVertical ? 0 : 20}>
+      <VStack pb={48} px={isVertical ? 0 : 20}>
 
         {isLoading ? (
           <HStack space={8} pt={32} flex={1} justifyContent="center" alignItems="center">
@@ -242,7 +242,9 @@ export function ApiaryDetails() {
                 ) : null
               )}
               ListEmptyComponent={() => (
-                <Text fontSize="lg" textAlign="center">Nenhuma Colmeia cadastrada</Text>
+                <Box flex={1} justifyContent="center" alignItems="center">
+                  <Text fontSize="lg" color="gray.100" textAlign="center">Nenhuma Colmeia cadastrada</Text>
+                </Box>
               )}
             />
         }
