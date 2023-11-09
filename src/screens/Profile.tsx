@@ -99,7 +99,6 @@ export function Profile() {
   const cancelRef = useRef(null);
 
   async function handleProfileUpdate(data: FormDataProps) {
-    console.log(data);
     try {
       setIsUpdating(true);
 

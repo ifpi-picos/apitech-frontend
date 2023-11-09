@@ -205,7 +205,7 @@ export function ApiaryDetails() {
           </HStack>
         </HStack>
       </VStack>
-      <VStack pb={48} px={isVertical ? 0 : 20}>
+      <VStack flex={1} px={isVertical ? 0 : 20}>
 
         {isLoading ? (
           <HStack space={8} pt={32} flex={1} justifyContent="center" alignItems="center">
