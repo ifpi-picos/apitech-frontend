@@ -10,6 +10,8 @@ import { AppNavigatorRoutesProps } from "../routes/app.routes";
 import { Button } from "../components/Button";
 import { get } from "react-native/Libraries/TurboModule/TurboModuleRegistry";
 import { api } from "../services/api";
+import { string } from "yup";
+import { set } from "react-hook-form";
 
 type RouteParamsProps = {
   hiveID: number;
@@ -91,7 +93,7 @@ export function Hive() {
     estadoDaRainha: hiveData.estadoRainha?.aspecto,
   });
 
-  const [listaDeValores, setListaDeValores] = useState([]);
+  const [listaDeValores, setListaDeValores] = useState([{}]) as any;
 
   const isVertical = windowDimensions.height > windowDimensions.width; // Verifica se a orientação é vertical
 
@@ -107,18 +109,13 @@ export function Hive() {
   }
   
   useEffect(() => {
-
-    hive.forEach(item => {
       try {
-        if (item.id === hiveID) {
           api.get(`/colmeias/${hiveID}`)
             .then(response => {
               setHiveData(response.data)
-              console.log("teste", hiveData)
+              // console.log("teste", hiveData)
             })
-        }
-        
-      } catch (error: any) {
+        } catch (error: any) {
         if (error.response && error.response.data && error.response.data.mensagem) {
   
           toast.show({
@@ -135,168 +132,177 @@ export function Hive() {
           });
         }
       }
-    })
+    }, [hiveID]);
+
+    async function handleRadioChange(name: string, value: string) {
+      setRadioValues((prevColmeiaPreModificacao) => ({
+        ...prevColmeiaPreModificacao,
+        [name]: value,
+      }));
+      // console.log(name, value)
+      // console.log("interno:", radioValues)
+
+    }
+    console.log(radioValues)
+    console.log(hiveID)
+    console.log("revisao", colmeiaPreModificacao)
+
+    // console.log("ridosValue", colmeiaPreModificacao)
+
+    // console.log("radios", colmeiaPreModificacao)
+    // useEffect(() => {
+    //   try { 
+
+    //       api.patch(`/colmeias/${hiveID}`, {colmeiaPreModificacao})
+    //         console.log("selecionada unico: ", hiveData)
+    //         console.log("selecionada Lista:", hive)
       
-      
-  }, [hiveID]);
-  
-  async function getHiveData() { 
-    await api.get(`/colmeias/${hiveID}`)
-    .then(response => {
-      // setHiveData(response.data)
-      // console.log(response.data)
-    })
-  }
-
-   async function handleRadioChange(name: string, value: any) {
-    setRadioValues({
-      ...radioValues,
-      [name]: value,
-    });
-    // await setColmeiaPreModificacao({
-    //   ...colmeiaPreModificacao,
-    //   estadoCriaNova: {
-    //     localizada: radioValues.novasCriaLocalizada as any,
-    //     quantidade: radioValues.quantidadeDeCria  as any,
-    //     estado: radioValues.estadoDaCriaNova  as any,
-    //   },
-    //   estadoCriaMadura: {
-    //     localizada: radioValues.criaMadurasLocalizada  as any,
-    //     quantidade: radioValues.quantidadeDeCriaMaduras  as any,
-    //     estado: radioValues.estadoDasCriasMaduras  as any,
-    //   },
-    //   estadoMel: {
-    //     localizada: radioValues.melLocalizado  as any,
-    //     quantidade: radioValues.quantidadeDeMel  as any,
-    //     estado: radioValues.estadoDoMel  as any,
-    //   },
-    //   estadoPolen: {
-    //     localizada: radioValues.polenLocalizado  as any,
-    //     quantidade: radioValues.quantidadeDePolen  as any,
-    //   },
-    //   estadoRainha: {
-    //     localizada: radioValues.rainhaLocalizada  as any,
-    //     estado: radioValues.idadeDaRainha  as any,
-    //     aspecto: radioValues.estadoDaRainha  as any,
-    //   },
-    // })
-  }
-
- console.log("radios", radioValues)
- console.log(hiveData)
-
- console.log("colmeia pre modificação", colmeiaPreModificacao)
+    //       toast.show({
+    //         title: 'Revisão salva com sucesso!',
+    //         placement: 'top',
+    //         bgColor: 'green.500',
+    //       });
+    //     } catch(error: any) {
+    //       toast.show({
+    //         title: 'Ocorreu um erro ao salvar a revisão.',
+    //         placement: 'top',
+    //         bgColor: 'red.500',
+    //       });
+    //     }
+    // }, [colmeiaPreModificacao])
 
   
-
-   
-
   async function handleSaveRevisao() {
+    setColmeiaPreModificacao((PreModificacao)=> ({
+      ...PreModificacao,
+      estadoCriaNova: {
+        localizada: radioValues.novasCriaLocalizada,
+        quantidade: radioValues.quantidadeDeCria,
+        estado: radioValues.estadoDaCriaNova,
+      },
+      estadoCriaMadura: {
+        localizada: radioValues.criaMadurasLocalizada,
+        quantidade: radioValues.quantidadeDeCriaMaduras,
+        estado: radioValues.estadoDasCriasMaduras,
+      },
+      estadoMel: {
+        localizada: radioValues.melLocalizado,
+        quantidade: radioValues.quantidadeDeMel,
+        estado: radioValues.estadoDoMel,
+      },
+      estadoPolen: {
+        localizada: radioValues.polenLocalizado,
+        quantidade: radioValues.quantidadeDePolen,
+      },
+      estadoRainha: {
+        localizada: radioValues.rainhaLocalizada,
+        estado: radioValues.idadeDaRainha,
+        aspecto: radioValues.estadoDaRainha,
+      },
+    } as ColmeiaPreModificacao))
+    // setHiveData((prevHiveData) => ({
+    //         ...prevHiveData,
+    //         estadoCriaNova: {
+    //           localizada: colmeiaPreModificacao.estadoCriaNova?.localizada,
+    //           quantidade: colmeiaPreModificacao.estadoCriaNova?.quantidade,
+    //           estado: colmeiaPreModificacao.estadoCriaNova?.estado,
+    //         },
+    //         estadoCriaMadura: {
+    //           localizada: colmeiaPreModificacao.estadoCriaMadura?.localizada,
+    //           quantidade: colmeiaPreModificacao.estadoCriaMadura?.quantidade,
+    //           estado: colmeiaPreModificacao.estadoCriaMadura?.estado,
+    //         },
+    //         estadoMel: {
+    //           localizada: colmeiaPreModificacao.estadoMel?.localizada,
+    //           quantidade: colmeiaPreModificacao.estadoMel?.quantidade,
+    //           estado: colmeiaPreModificacao.estadoMel?.estado,
+    //         },
+    //         estadoPolen: {
+    //           localizada: colmeiaPreModificacao.estadoPolen?.localizada,
+    //           quantidade: colmeiaPreModificacao.estadoPolen?.quantidade,
+    //         },
+    //         estadoRainha: {
+    //           localizada: colmeiaPreModificacao.estadoRainha?.localizada,
+    //           estado: colmeiaPreModificacao.estadoRainha?.estado,
+    //           aspecto: colmeiaPreModificacao.estadoRainha?.aspecto,
+    //         },
+    //       } as HiveDTO
+    //     ))
+    // console.log("Resposta", radiosHive.data)
+    
+    // console.log("radios dentro: ", colmeiaPreModificacao)
+
     try { 
+
       const radiosHive = await api.patch(`/colmeias/${hiveID}`, {colmeiaPreModificacao})
 
       if(radiosHive.status === 200) {
-        setColmeiaPreModificacao({
-          estadoCriaNova: {
-            localizada: radioValues.novasCriaLocalizada as any,
-            quantidade: radioValues.quantidadeDeCria  as any,
-            estado: radioValues.estadoDaCriaNova  as any,
-          },
-          estadoCriaMadura: {
-            localizada: radioValues.criaMadurasLocalizada  as any,
-            quantidade: radioValues.quantidadeDeCriaMaduras  as any,
-            estado: radioValues.estadoDasCriasMaduras  as any,
-          },
-          estadoMel: {
-            localizada: radioValues.melLocalizado  as any,
-            quantidade: radioValues.quantidadeDeMel  as any,
-            estado: radioValues.estadoDoMel  as any,
-          },
-          estadoPolen: {
-            localizada: radioValues.polenLocalizado  as any,
-            quantidade: radioValues.quantidadeDePolen  as any,
-          },
-          estadoRainha: {
-            localizada: radioValues.rainhaLocalizada  as any,
-            estado: radioValues.idadeDaRainha  as any,
-            aspecto: radioValues.estadoDaRainha  as any,
-          },
-        })
-
-        await hive.map(item => {
-          if (item.id === hiveID) {
-            console.log(item)
-            return {
-            ...item,
-            estadoCriaNova: {
-              localizada: colmeiaPreModificacao.estadoCriaNova?.localizada as any,
-              quantidade: colmeiaPreModificacao.estadoCriaNova?.quantidade as any,
-              estado: colmeiaPreModificacao.estadoCriaNova?.estado as any,
-            },
-            estadoCriaMadura: {
-              localizada: colmeiaPreModificacao.estadoCriaMadura?.localizada as any,
-              quantidade: colmeiaPreModificacao.estadoCriaMadura?.quantidade as any,
-              estado: colmeiaPreModificacao.estadoCriaMadura?.estado as any,
-            },
-            estadoMel: {
-              localizada: colmeiaPreModificacao.estadoMel?.localizada as any,
-              quantidade: colmeiaPreModificacao.estadoMel?.quantidade as any,
-              estado: colmeiaPreModificacao.estadoMel?.estado as any,
-            },
-            estadoPolen: {
-              localizada: colmeiaPreModificacao.estadoPolen?.localizada as any,
-              quantidade: colmeiaPreModificacao.estadoPolen?.quantidade as any,
-            },
-            estadoRainha: {
-              localizada: colmeiaPreModificacao.estadoRainha?.localizada as any,
-              estado: colmeiaPreModificacao.estadoRainha?.estado as any,
-              aspecto: colmeiaPreModificacao.estadoRainha?.aspecto as any,
-            }
-          }}
-        })
-      console.log("colmeia alterada:", hive)
-
+        console.log("resposta:", radiosHive.data)
         
-        console.log(`SUA COLMEIA: LISTA: `, radiosHive.data)
-        // console.log(hiveData)
-        console.log(hive)
-        // console.log(colmeiaPreModificacao)
         
-
+        // console.log("radios", colmeiaPreModificacao)
+      //   setHiveData((prevHiveData) => ({
+      //     ...prevHiveData,
+      //     estadoCriaNova: {
+      //       localizada: colmeiaPreModificacao.estadoCriaNova?.localizada,
+      //       quantidade: colmeiaPreModificacao.estadoCriaNova?.quantidade,
+      //       estado: colmeiaPreModificacao.estadoCriaNova?.estado,
+      //     },
+      //     estadoCriaMadura: {
+      //       localizada: colmeiaPreModificacao.estadoCriaMadura?.localizada,
+      //       quantidade: colmeiaPreModificacao.estadoCriaMadura?.quantidade,
+      //       estado: colmeiaPreModificacao.estadoCriaMadura?.estado,
+      //     },
+      //     estadoMel: {
+      //       localizada: colmeiaPreModificacao.estadoMel?.localizada,
+      //       quantidade: colmeiaPreModificacao.estadoMel?.quantidade,
+      //       estado: colmeiaPreModificacao.estadoMel?.estado,
+      //     },
+      //     estadoPolen: {
+      //       localizada: colmeiaPreModificacao.estadoPolen?.localizada,
+      //       quantidade: colmeiaPreModificacao.estadoPolen?.quantidade,
+      //     },
+      //     estadoRainha: {
+      //       localizada: colmeiaPreModificacao.estadoRainha?.localizada,
+      //       estado: colmeiaPreModificacao.estadoRainha?.estado,
+      //       aspecto: colmeiaPreModificacao.estadoRainha?.aspecto,
+      //     },
+      //   } as HiveDTO
+      // ))
+        // hive.map((item) => {
+        //   if(item.id === hiveID) {
+        //     setHive((prevHive) => ({
+        //       ...prevHive,
+        //       estadoCriaNova: {
+        //         localizada: hiveData.estadoCriaNova?.localizada,
+        //         quantidade: hiveData.estadoCriaNova?.quantidade,
+        //         estado: hiveData.estadoCriaNova?.estado,
+        //       },
+        //       estadoCriaMadura: {
+        //         localizada: hiveData.estadoCriaMadura?.localizada,
+        //         quantidade: hiveData.estadoCriaMadura?.quantidade,
+        //         estado: hiveData.estadoCriaMadura?.estado,
+        //       },
+        //       estadoMel: {
+        //         localizada: hiveData.estadoMel?.localizada,
+        //         quantidade: hiveData.estadoMel?.quantidade,
+        //         estado: hiveData.estadoMel?.estado,
+        //       },
+        //       estadoPolen: {
+        //         localizada: hiveData.estadoPolen?.localizada,
+        //         quantidade: hiveData.estadoPolen?.quantidade,
+        //       },
+        //       estadoRainha: {
+        //         localizada: hiveData.estadoRainha?.localizada,
+        //         estado: hiveData.estadoRainha?.estado,
+        //         aspecto: hiveData.estadoRainha?.aspecto,
+        //       },
+        //     }))
+        //   }
+        // })
+       
 
       }
-      // await setHiveData({
-      //   ...hiveData,
-      //   estadoCriaNova: {
-      //     localizada: colmeiaPreModificacao.estadoCriaNova?.localizada as any,
-      //     quantidade: colmeiaPreModificacao.estadoCriaNova?.quantidade as any,
-      //     estado: colmeiaPreModificacao.estadoCriaNova?.estado as any,
-      //   },
-      //   estadoCriaMadura: {
-      //     localizada: colmeiaPreModificacao.estadoCriaMadura?.localizada as any,
-      //     quantidade: colmeiaPreModificacao.estadoCriaMadura?.quantidade as any,
-      //     estado: colmeiaPreModificacao.estadoCriaMadura?.estado as any,
-      //   },
-      //   estadoMel: {
-      //     localizada: colmeiaPreModificacao.estadoMel?.localizada as any,
-      //     quantidade: colmeiaPreModificacao.estadoMel?.quantidade as any,
-      //     estado: colmeiaPreModificacao.estadoMel?.estado as any,
-      //   },
-      //   estadoPolen: {
-      //     localizada: colmeiaPreModificacao.estadoPolen?.localizada as any,
-      //     quantidade: colmeiaPreModificacao.estadoPolen?.quantidade as any,
-      //   },
-      //   estadoRainha: {
-      //     localizada: colmeiaPreModificacao.estadoRainha?.localizada as any,
-      //     estado: colmeiaPreModificacao.estadoRainha?.estado as any,
-      //     aspecto: colmeiaPreModificacao.estadoRainha?.aspecto as any,
-      //   },
-      // });
-      // console.log(hiveData)
-
-      
-      
-
 
       toast.show({
         title: 'Revisão salva com sucesso!',
@@ -312,39 +318,6 @@ export function Hive() {
     }
 
   }
-
-
-
-
-  //   setHiveData({
-  //     ...hiveData,
-  //     estadoCriaNova: {
-  //       localizada: radioValues.novasCriaLocalizada as any,
-  //       quantidade: radioValues.quantidadeDeCria  as any,
-  //       estado: radioValues.estadoDaCriaNova  as any,
-  //     },
-  //     estadoCriaMadura: {
-  //       localizada: radioValues.criaMadurasLocalizada  as any,
-  //       quantidade: radioValues.quantidadeDeCriaMaduras  as any,
-  //       estado: radioValues.estadoDasCriasMaduras  as any,
-  //     },
-  //     estadoMel: {
-  //       localizada: radioValues.melLocalizado  as any,
-  //       quantidade: radioValues.quantidadeDeMel  as any,
-  //       estado: radioValues.estadoDoMel  as any,
-  //     },
-  //     estadoPolen: {
-  //       localizada: radioValues.polenLocalizado  as any,
-  //       quantidade: radioValues.quantidadeDePolen  as any,
-  //     },
-  //     estadoRainha: {
-  //       localizada: radioValues.rainhaLocalizada  as any,
-  //       estado: radioValues.idadeDaRainha  as any,
-  //       aspecto: radioValues.estadoDaRainha  as any,
-  //     },
-  //   });
-  // console.log(hiveData)
-  // }
 
     return (
       <VStack flex={1}>
@@ -381,7 +354,7 @@ export function Hive() {
               onChange={(value) => handleRadioChange("novasCriaLocalizada", value)}
               style={{ flexDirection: "row", width: "100%" , alignItems: "center", justifyContent: "space-evenly", flexWrap: "wrap" }} 
               // converter para string
-              defaultValue={hiveData.estadoCriaNova?.localizada as any}  
+              value={hiveData.estadoCriaNova?.localizada as any}  
               name="novasCriaLocalizada" 
               accessibilityLabel="Localização de Crias Novas e Ovos">
               

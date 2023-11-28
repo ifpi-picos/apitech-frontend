@@ -77,7 +77,7 @@ enum AspectoRainha {
 
 export type ColmeiaPreModificacao = {
     estadoCriaNova?: {
-        localizada?: CriaLocalizada
+        localizada?: string
         quantidade?: QuantidadeCria
         estado?: EstadoCriaNova
     }
@@ -106,7 +106,7 @@ export type HiveDTO = {
     numero: number, 
     apiarioId: number
     estadoCriaNova?: {
-        localizada?: CriaLocalizada
+        localizada?: string
         quantidade?: QuantidadeCria
         estado?: EstadoCriaNova
     }
