@@ -12,68 +12,69 @@ import { get } from "react-native/Libraries/TurboModule/TurboModuleRegistry";
 import { api } from "../services/api";
 import { string } from "yup";
 import { set } from "react-hook-form";
+import { Loading } from "../components/Loading";
 
 type RouteParamsProps = {
   hiveID: number;
 }
 
-type HiveStateProps = {
-  
-  estadoCriaNova?: {
-    localizada: number | "" | undefined;
-    quantidade?: number | "" | undefined;
-    estado?: number | "" | undefined;
-  }
-  estadoCriaMadura?: {
-      localizada: number | "" | undefined;
-      quantidade?: number | "" | undefined;
-      estado?: number | "" | undefined;
-  }
-  estadoMel?: {
-      localizada: number | "" | undefined;
-      quantidade?: number | "" | undefined;
-      estado?: number | "" | undefined;
-  }
-  estadoPolen?: {
-      localizada: number | "" | undefined;
-      quantidade?: number | "" | undefined;
-  }
-  estadoRainha?: {
-      localizada: number | "" | undefined;
-      estado?: number | "" | undefined;
-      aspecto?: number | "" | undefined;
-  }
-}
-
 export function Hive() {
   const [isLoading, setIsLoading] = useState(true);
-  const [hiveData, setHiveData] = useState<HiveDTO>({} as HiveDTO);
-  const [colmeiaPreModificacao, setColmeiaPreModificacao] = useState<ColmeiaPreModificacao>({
+  const [hiveData, setHiveData] = useState<HiveDTO>({
+    id: 0,
+    apiarioId: 0,
+    numero: 0,
     estadoCriaNova: {
-      localizada: hiveData.estadoCriaNova?.localizada,
-      quantidade: hiveData.estadoCriaNova?.quantidade,
-      estado: hiveData.estadoCriaNova?.estado,
+      localizada: "",
+      quantidade: "",
+      estado: "",
     },
     estadoCriaMadura: {
-      localizada: hiveData.estadoCriaMadura?.localizada,
-      quantidade: hiveData.estadoCriaMadura?.quantidade,
-      estado: hiveData.estadoCriaMadura?.estado,
+      localizada: "",
+      quantidade: "",
+      estado: "",
     },
     estadoMel: {
-      localizada: hiveData.estadoMel?.localizada,
-      quantidade: hiveData.estadoMel?.quantidade,
-      estado: hiveData.estadoMel?.estado,
+      localizada: "",
+      quantidade: "",
+      estado: "",
     },
     estadoPolen: {
-      localizada: hiveData.estadoPolen?.localizada,
-      quantidade: hiveData.estadoPolen?.quantidade,
+      localizada: "",
+      quantidade: "",
     },
     estadoRainha: {
-      localizada: hiveData.estadoRainha?.localizada,
-      estado: hiveData.estadoRainha?.estado,
-      aspecto: hiveData.estadoRainha?.aspecto,
+      localizada: "",
+      estado: "",
+      aspecto: "",
     },
-  } as ColmeiaPreModificacao);
+  } as HiveDTO);
+  // const [colmeiaPreModificacao, setColmeiaPreModificacao] = useState<ColmeiaPreModificacao>({
+  //   estadoCriaNova: {
+  //     localizada: hiveData.estadoCriaNova?.localizada,
+  //     quantidade: hiveData.estadoCriaNova?.quantidade,
+  //     estado: hiveData.estadoCriaNova?.estado,
+  //   },
+  //   estadoCriaMadura: {
+  //     localizada: hiveData.estadoCriaMadura?.localizada,
+  //     quantidade: hiveData.estadoCriaMadura?.quantidade,
+  //     estado: hiveData.estadoCriaMadura?.estado,
+  //   },
+  //   estadoMel: {
+  //     localizada: hiveData.estadoMel?.localizada,
+  //     quantidade: hiveData.estadoMel?.quantidade,
+  //     estado: hiveData.estadoMel?.estado,
+  //   },
+  //   estadoPolen: {
+  //     localizada: hiveData.estadoPolen?.localizada,
+  //     quantidade: hiveData.estadoPolen?.quantidade,
+  //   },
+  //   estadoRainha: {
+  //     localizada: hiveData.estadoRainha?.localizada,
+  //     estado: hiveData.estadoRainha?.estado,
+  //     aspecto: hiveData.estadoRainha?.aspecto,
+  //   },
+  // } as ColmeiaPreModificacao);
   const windowDimensions = useWindowDimensions();
 
   const [radioValues, setRadioValues] = useState({
@@ -108,30 +109,47 @@ export function Hive() {
     navigation.navigate("Apiario_Detalhes", { apiaryID });
   }
   
-  useEffect(() => {
-      try {
-          api.get(`/colmeias/${hiveID}`)
-            .then(response => {
-              setHiveData(response.data)
-              // console.log("teste", hiveData)
-            })
-        } catch (error: any) {
-        if (error.response && error.response.data && error.response.data.mensagem) {
+  // useEffect(() => {
+  //   setIsLoading(true);
+  //   api.get(`/colmeias/${hiveID}`).then(async response => {
+  //     console.log("resposta", response.data)
+  //     await setHiveData(response.data);
+  //     setIsLoading(false);
+  //   })
+  //   }, [hiveID]);
+
+    useEffect(() => {
+      setIsLoading(true);
+      api.get(`/colmeias/${hiveID}`).then(async response => {
+        const dataFromBackend = response.data;
+        await setHiveData(dataFromBackend);
+        console.log("resposta", dataFromBackend)
+        console.log("resposta 2", hiveData)
+        setIsLoading(false);
   
-          toast.show({
-            title: error.response.data.mensagem,
-            placement: 'top',
-            bgColor: 'red.500',
-          });
-        } else {
-  
-          toast.show({
-            title: 'Ocorreu um erro no servidor.',
-            placement: 'top',
-            bgColor: 'red.500',
-          });
-        }
-      }
+        // Atualizar o estado `radioValues` com os dados recebidos do back-end
+        setRadioValues({
+          novasCriaLocalizada: dataFromBackend?.estadoCriaNova?.localizada,
+          quantidadeDeCria: dataFromBackend?.estadoCriaNova?.quantidade,
+          estadoDaCriaNova: dataFromBackend?.estadoCriaNova?.estado || '',
+          criaMadurasLocalizada: dataFromBackend?.estadoCriaMadura?.localizada || '',
+          quantidadeDeCriaMaduras: dataFromBackend?.estadoCriaMadura?.quantidade || '',
+          estadoDasCriasMaduras: dataFromBackend?.estadoCriaMadura?.estado || '',
+          melLocalizado: dataFromBackend?.estadoMel?.localizada || '',
+          quantidadeDeMel: dataFromBackend?.estadoMel?.quantidade || '',
+          estadoDoMel: dataFromBackend?.estadoMel?.estado || '',
+          polenLocalizado: dataFromBackend?.estadoPolen?.localizada || '',
+          quantidadeDePolen: dataFromBackend?.estadoPolen?.quantidade || '',
+          rainhaLocalizada: dataFromBackend?.estadoRainha?.localizada || '',
+          idadeDaRainha: dataFromBackend?.estadoRainha?.estado || '',
+          estadoDaRainha: dataFromBackend?.estadoRainha?.aspecto || '',
+        });
+        console.log("resposta 3", radioValues)
+
+      }).catch(error => {
+        console.error('Erro ao carregar os dados do back-end:', error);
+        setIsLoading(false);
+      });
     }, [hiveID]);
 
     async function handleRadioChange(name: string, value: string) {
@@ -139,169 +157,45 @@ export function Hive() {
         ...prevColmeiaPreModificacao,
         [name]: value,
       }));
-      // console.log(name, value)
-      // console.log("interno:", radioValues)
 
     }
-    console.log(radioValues)
-    console.log(hiveID)
-    console.log("revisao", colmeiaPreModificacao)
 
-    // console.log("ridosValue", colmeiaPreModificacao)
-
-    // console.log("radios", colmeiaPreModificacao)
-    // useEffect(() => {
-    //   try { 
-
-    //       api.patch(`/colmeias/${hiveID}`, {colmeiaPreModificacao})
-    //         console.log("selecionada unico: ", hiveData)
-    //         console.log("selecionada Lista:", hive)
-      
-    //       toast.show({
-    //         title: 'Revisão salva com sucesso!',
-    //         placement: 'top',
-    //         bgColor: 'green.500',
-    //       });
-    //     } catch(error: any) {
-    //       toast.show({
-    //         title: 'Ocorreu um erro ao salvar a revisão.',
-    //         placement: 'top',
-    //         bgColor: 'red.500',
-    //       });
-    //     }
-    // }, [colmeiaPreModificacao])
-
+    // console.log("teste Colmeia fora", hiveData)
   
   async function handleSaveRevisao() {
-    setColmeiaPreModificacao((PreModificacao)=> ({
-      ...PreModificacao,
-      estadoCriaNova: {
-        localizada: radioValues.novasCriaLocalizada,
-        quantidade: radioValues.quantidadeDeCria,
-        estado: radioValues.estadoDaCriaNova,
-      },
-      estadoCriaMadura: {
-        localizada: radioValues.criaMadurasLocalizada,
-        quantidade: radioValues.quantidadeDeCriaMaduras,
-        estado: radioValues.estadoDasCriasMaduras,
-      },
-      estadoMel: {
-        localizada: radioValues.melLocalizado,
-        quantidade: radioValues.quantidadeDeMel,
-        estado: radioValues.estadoDoMel,
-      },
-      estadoPolen: {
-        localizada: radioValues.polenLocalizado,
-        quantidade: radioValues.quantidadeDePolen,
-      },
-      estadoRainha: {
-        localizada: radioValues.rainhaLocalizada,
-        estado: radioValues.idadeDaRainha,
-        aspecto: radioValues.estadoDaRainha,
-      },
-    } as ColmeiaPreModificacao))
-    // setHiveData((prevHiveData) => ({
-    //         ...prevHiveData,
-    //         estadoCriaNova: {
-    //           localizada: colmeiaPreModificacao.estadoCriaNova?.localizada,
-    //           quantidade: colmeiaPreModificacao.estadoCriaNova?.quantidade,
-    //           estado: colmeiaPreModificacao.estadoCriaNova?.estado,
-    //         },
-    //         estadoCriaMadura: {
-    //           localizada: colmeiaPreModificacao.estadoCriaMadura?.localizada,
-    //           quantidade: colmeiaPreModificacao.estadoCriaMadura?.quantidade,
-    //           estado: colmeiaPreModificacao.estadoCriaMadura?.estado,
-    //         },
-    //         estadoMel: {
-    //           localizada: colmeiaPreModificacao.estadoMel?.localizada,
-    //           quantidade: colmeiaPreModificacao.estadoMel?.quantidade,
-    //           estado: colmeiaPreModificacao.estadoMel?.estado,
-    //         },
-    //         estadoPolen: {
-    //           localizada: colmeiaPreModificacao.estadoPolen?.localizada,
-    //           quantidade: colmeiaPreModificacao.estadoPolen?.quantidade,
-    //         },
-    //         estadoRainha: {
-    //           localizada: colmeiaPreModificacao.estadoRainha?.localizada,
-    //           estado: colmeiaPreModificacao.estadoRainha?.estado,
-    //           aspecto: colmeiaPreModificacao.estadoRainha?.aspecto,
-    //         },
-    //       } as HiveDTO
-    //     ))
-    // console.log("Resposta", radiosHive.data)
-    
-    // console.log("radios dentro: ", colmeiaPreModificacao)
 
     try { 
 
-      const radiosHive = await api.patch(`/colmeias/${hiveID}`, {colmeiaPreModificacao})
+      const radiosHive = await api.patch(`/colmeias/${hiveID}`, { 
+        estadoCriaNova: {
+          localizada: radioValues.novasCriaLocalizada,
+          quantidade: radioValues.quantidadeDeCria,
+          estado: radioValues.estadoDaCriaNova,
+        },
+        estadoCriaMadura: {
+          localizada: radioValues.criaMadurasLocalizada,
+          quantidade: radioValues.quantidadeDeCriaMaduras,
+          estado: radioValues.estadoDasCriasMaduras,
+        },
+        estadoMel: {
+          localizada: radioValues.melLocalizado,
+          quantidade: radioValues.quantidadeDeMel,
+          estado: radioValues.estadoDoMel,
+        },
+        estadoPolen: {
+          localizada: radioValues.polenLocalizado,
+          quantidade: radioValues.quantidadeDePolen,
+        },
+        estadoRainha: {
+          localizada: radioValues.rainhaLocalizada,
+          estado: radioValues.idadeDaRainha,
+          aspecto: radioValues.estadoDaRainha,
+        },
+      })
+    
 
       if(radiosHive.status === 200) {
         console.log("resposta:", radiosHive.data)
-        
-        
-        // console.log("radios", colmeiaPreModificacao)
-      //   setHiveData((prevHiveData) => ({
-      //     ...prevHiveData,
-      //     estadoCriaNova: {
-      //       localizada: colmeiaPreModificacao.estadoCriaNova?.localizada,
-      //       quantidade: colmeiaPreModificacao.estadoCriaNova?.quantidade,
-      //       estado: colmeiaPreModificacao.estadoCriaNova?.estado,
-      //     },
-      //     estadoCriaMadura: {
-      //       localizada: colmeiaPreModificacao.estadoCriaMadura?.localizada,
-      //       quantidade: colmeiaPreModificacao.estadoCriaMadura?.quantidade,
-      //       estado: colmeiaPreModificacao.estadoCriaMadura?.estado,
-      //     },
-      //     estadoMel: {
-      //       localizada: colmeiaPreModificacao.estadoMel?.localizada,
-      //       quantidade: colmeiaPreModificacao.estadoMel?.quantidade,
-      //       estado: colmeiaPreModificacao.estadoMel?.estado,
-      //     },
-      //     estadoPolen: {
-      //       localizada: colmeiaPreModificacao.estadoPolen?.localizada,
-      //       quantidade: colmeiaPreModificacao.estadoPolen?.quantidade,
-      //     },
-      //     estadoRainha: {
-      //       localizada: colmeiaPreModificacao.estadoRainha?.localizada,
-      //       estado: colmeiaPreModificacao.estadoRainha?.estado,
-      //       aspecto: colmeiaPreModificacao.estadoRainha?.aspecto,
-      //     },
-      //   } as HiveDTO
-      // ))
-        // hive.map((item) => {
-        //   if(item.id === hiveID) {
-        //     setHive((prevHive) => ({
-        //       ...prevHive,
-        //       estadoCriaNova: {
-        //         localizada: hiveData.estadoCriaNova?.localizada,
-        //         quantidade: hiveData.estadoCriaNova?.quantidade,
-        //         estado: hiveData.estadoCriaNova?.estado,
-        //       },
-        //       estadoCriaMadura: {
-        //         localizada: hiveData.estadoCriaMadura?.localizada,
-        //         quantidade: hiveData.estadoCriaMadura?.quantidade,
-        //         estado: hiveData.estadoCriaMadura?.estado,
-        //       },
-        //       estadoMel: {
-        //         localizada: hiveData.estadoMel?.localizada,
-        //         quantidade: hiveData.estadoMel?.quantidade,
-        //         estado: hiveData.estadoMel?.estado,
-        //       },
-        //       estadoPolen: {
-        //         localizada: hiveData.estadoPolen?.localizada,
-        //         quantidade: hiveData.estadoPolen?.quantidade,
-        //       },
-        //       estadoRainha: {
-        //         localizada: hiveData.estadoRainha?.localizada,
-        //         estado: hiveData.estadoRainha?.estado,
-        //         aspecto: hiveData.estadoRainha?.aspecto,
-        //       },
-        //     }))
-        //   }
-        // })
-       
-
       }
 
       toast.show({
@@ -318,7 +212,7 @@ export function Hive() {
     }
 
   }
-
+  console.log("teste Colmeia", radioValues)
     return (
       <VStack flex={1}>
         <VStack px={isVertical ? 6 : 32} bg="GREEN" pt={isVertical ? 16 : 8} rounded="xl">
@@ -344,7 +238,7 @@ export function Hive() {
         </VStack>
 
         <ScrollView >
-        <Center mb={12}>
+        {isLoading ? <Loading /> : <Center mb={12}>
           <Box my={4} pb={2} mx={isVertical ? 2 : 20} bg="gray.100" borderWidth={1} borderColor={"GREEN"} borderBottomRadius={10}>
             <Center py={1}  backgroundColor="GREEN">
               <Text fontSize="lg" fontWeight="bold" textAlign="center">Localização de Crias Novas e Ovos</Text>
@@ -354,7 +248,7 @@ export function Hive() {
               onChange={(value) => handleRadioChange("novasCriaLocalizada", value)}
               style={{ flexDirection: "row", width: "100%" , alignItems: "center", justifyContent: "space-evenly", flexWrap: "wrap" }} 
               // converter para string
-              value={hiveData.estadoCriaNova?.localizada as any}  
+              value={hiveData.estadoCriaNova?.localizada}  
               name="novasCriaLocalizada" 
               accessibilityLabel="Localização de Crias Novas e Ovos">
               
@@ -633,7 +527,7 @@ export function Hive() {
               name="idadeDaRainha" 
               accessibilityLabel="Idade da Rainha">
               
-              <Radio colorScheme="emerald" size="lg" value="RAINHA COM IDADE CONHECIDA0" my={1}>
+              <Radio colorScheme="emerald" size="lg" value="RAINHA COM IDADE CONHECIDA" my={1}>
                 Rainha com Idade Conhecida
               </Radio>
               <Radio colorScheme="emerald" size="lg" value="RAINHA COM IDADE DESCONHECIDA" my={1}>
@@ -670,7 +564,7 @@ export function Hive() {
             >
             </Button>
           
-        </Center>
+        </Center>}
         </ScrollView>
       </VStack>
     )
