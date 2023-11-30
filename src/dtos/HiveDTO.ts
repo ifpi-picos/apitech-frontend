@@ -105,27 +105,27 @@ export type HiveDTO = {
     id: number, 
     numero: number, 
     apiarioId: number
-    estadoCriaNova: {
-        localizada: string
-        quantidade: string
-        estado: string
+    estadoCriaNova?: {
+        localizada?: string
+        quantidade?: string
+        estado?: string
     }
     estadoCriaMadura?: {
-        localizada?: string
+        localizada: string
         quantidade?: string
         estado?: string
     }
     estadoMel?: {
-        localizada?: string
+        localizada: string
         quantidade?: string
         estado?: string
     }
     estadoPolen?: {
-        localizada?: string
+        localizada: string
         quantidade?: string
     }
     estadoRainha?: {
-        localizada?: string
+        localizada: string
         estado?: string
         aspecto?: string
     }
