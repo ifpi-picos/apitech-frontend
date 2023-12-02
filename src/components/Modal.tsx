@@ -1,9 +1,10 @@
-import React, {useState} from 'react';
-import {Alert,ModalProps as ModalPropsReact, Modal as ModalReact, StyleSheet, Text, Pressable, View} from 'react-native';
-import { Button, Center } from 'native-base';
+import React, { useState } from 'react';
+import { Alert, ModalProps as ModalPropsReact, Modal as ModalReact, StyleSheet, Text, Pressable, View } from 'react-native';
+import { Button, Center, useToast } from 'native-base';
 import { ApiaryDTO } from '../dtos/ApiaryDTO';
 import { api } from '../services/api';
 import { string } from 'yup';
+import { useAuth } from '../hooks/useAuth';
 
 interface ApiaryEdit {
   name?: string;
@@ -16,64 +17,141 @@ interface ModalProps extends ModalPropsReact {
   onCloseModal: () => void;
   handleEdit: (apiary: ApiaryDTO) => void;
   handleDelete: (apiaryId: number) => void;
- 
+
 }
 
-export default function Modal( { apiary, ApiaryEdit,  onCloseModal, ...props}:ModalProps): JSX.Element {
-    
-    const [modalVisible, setModalVisible] = useState(false);
-    
-    const handleEdit = async (apiaryId: any) => {
-      const response = await api.patch( `/apiarios/${apiaryId}`,{nome: string });
-      if (response.status === 200) {
-        console.log('Apiário editado com sucesso');
-        alert("Apiario editando com sucesso!")
-        handleEdit(response.data); 
-        } else {
-          console.error('Erro ao editar o apiário');
-          // Lide com o erro de acordo com a necessidade
-        }
-        /*setModalVisible(false)*/
-        onCloseModal();
-      };
-      
-      const handleDelete = async (apiaryId: any) => {
-        const response = await api.delete(`/apiarios/${apiaryId}`);
-        if (response.status === 200) {
-          // Remova o apiário do estado ou realize outras ações necessárias
-          alert("Apiario excluido com sucesso")
-          console.log('Apiário excluído com sucesso');
-        } else {
-          console.error('Erro ao excluir o apiário');
-          // Lide com o erro de acordo com a necessidade
-        } 
-        onCloseModal();
-     /* setModalVisible(false);*/
+export default function Modal({ apiary, ApiaryEdit, onCloseModal, ...props }: ModalProps): JSX.Element {
+
+  const [modalVisible, setModalVisible] = useState(false);
+  const [isLoading, setisLoading] = useState(false);
+  const toast = useToast();
+  const { fetchApiarys } = useAuth();
+
+
+  const handleEdit = async (apiary: any) => {
+    const response = await api.patch(`/apiarios/${apiary.id}`, { nome: apiary.nome });
+    if (response.status === 200) {
+
+      console.log('Apiário editado com sucesso');
+      alert("Apiario editando com sucesso!")
+      handleEdit(response.data);
+    } else {
+      console.error('Erro ao editar o apiário');
     }
-    
-  
-      return (
-        <ModalReact
-        animationType="slide"
-        transparent={true}
-        visible={modalVisible}
-        onRequestClose={() => {
-          Alert.alert('Modal has been closed.');
-          onCloseModal();
+    /*setModalVisible(false)*/
+    onCloseModal();
+  };
+
+  const handleDelete = async (apiaryId: number) => {
+    try{
+      const response = await api.delete(`/apiarios/${apiaryId}`);
+      setisLoading(true);
+      if (response.status === 200) {
+        fetchApiarys();
+        toast.show({
+          title: 'Apiário excluído com sucesso',
+          placement: 'top',
+          bgColor: 'green.500',
+        });
+        onCloseModal();
+      }
+    }
+    catch(error){
+      toast.show({
+        title: 'Erro ao excluir o Apiário',
+        placement: 'top',
+        bgColor: 'red.500',
+      });
+    }
+    finally{
+      onCloseModal();
+      setisLoading(false);
+    }
+
+  }
+
+
+  return (
+    <ModalReact
+      animationType="slide"
+      transparent={true}
+      visible={modalVisible}
+      onRequestClose={() => {
+        Alert.alert('Modal has been closed.');
+        onCloseModal();
+      }}
+      {...props}
+    >
+      <View
+        style={{
+          flex: 1,
+          justifyContent: 'center',
+          alignItems: 'center',
+          backgroundColor: 'rgba(0, 0, 0, 0.6)',
+          gap: 20,
         }}
-        {...props}
-        >
-        <View border-top={5}>
-          <View >
-            <Pressable onPress={onCloseModal}>
-            <Center   background-color="white">
-                <Button onPress={() =>handleEdit(apiary.nome)} >Editar apiario</Button>
-                <Button onPress={()=> handleDelete(apiary.id)} >Deletar apiario</Button>
-                <Button onPress={() => onCloseModal()} >fechar</Button>
-            </Center>
-            </Pressable>
-          </View>
-        </View>
-      </ModalReact>
-      )
+      >
+        <Button 
+          style={{
+            borderRadius: 10, 
+            paddingHorizontal: 4,
+            marginBottom: 10,
+          }}
+          onPress={() => handleEdit(apiary)}>
+          <Text
+            style={{
+              fontSize: 20,
+              fontWeight: 'bold',
+              color: '#fff',
+              paddingHorizontal: 16,
+              paddingVertical: 8,
+            }}
+          >
+            Editar Apiário
+          </Text>
+        </Button>
+        <Button 
+          style={{
+            borderRadius: 10,
+            paddingHorizontal: 4,
+            marginBottom: 10,
+            backgroundColor: '#F03434',
+          }}
+          isLoading={isLoading}
+          onPress={() => handleDelete(apiary.id)}>
+          <Text
+              style={{
+                fontSize: 20,
+                fontWeight: 'bold',
+                color: '#fff',
+                paddingHorizontal: 16,
+                paddingVertical: 8,
+              }}
+            >
+            Excluir Apiário
+          </Text>
+        </Button>
+        <Pressable 
+          style={{
+            borderRadius: 10, 
+            paddingHorizontal: 4,
+            marginBottom: 10,
+            backgroundColor: '#727171',
+          }}
+          onPress={() => onCloseModal()}>
+          <Text
+             style={{
+              fontSize: 20,
+              fontWeight: 'bold',
+              color: '#fff',
+              paddingHorizontal: 16,
+              paddingVertical: 8,
+            }}
+          >
+            Fechar
+          </Text>
+        </Pressable>
+      </View>
+    </ModalReact>
+  )
 }

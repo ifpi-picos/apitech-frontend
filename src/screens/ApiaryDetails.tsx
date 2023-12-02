@@ -236,7 +236,7 @@ export function ApiaryDetails() {
                   <HStack space={2} justifyContent="center">
                     <Spinner accessibilityLabel="Loading posts" />
                     <Heading color="emerald.500" fontSize="md">
-                      Carregando
+                      Carregando n
                     </Heading>
                   </HStack>
                 ) : null

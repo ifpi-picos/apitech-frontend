@@ -132,18 +132,6 @@ export function Hive() {
 
         } as HiveDTO);
 
-
-        // await setHiveData({
-        //   id: dataFromBackend.id,
-        //   apiarioId: dataFromBackend.apiarioId,
-        //   numero: dataFromBackend.numero,
-        //   estadoCriaNova: JSON.parse(dataFromBackend['estadoCriaNova']),
-        //   estadoCriaMadura: JSON.parse(dataFromBackend['estadoCriaMadura']),
-        //   estadoMel: JSON.parse(dataFromBackend['estadoMel']),
-        //   estadoPolen: JSON.parse(dataFromBackend['estadoPolen']),
-        //   estadoRainha: JSON.parse(dataFromBackend['estadoRainha']),
-        // } as HiveDTO);
-
         setIsLoading(false);
 
       }).catch(error => {

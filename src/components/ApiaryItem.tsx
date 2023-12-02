@@ -5,13 +5,12 @@ import { Entypo } from '@expo/vector-icons';
 import { ApiaryDTO } from "../dtos/ApiaryDTO";
 import { Button } from "native-base";
 import Modal from "./Modal";
+
 type Props = TouchableOpacityProps & {
   data: ApiaryDTO;
   onEdit: (apiary: ApiaryDTO) => void;
   onDelete: (apiaryId: number) => void;
 }
-
-
 
 export function ApiaryItem({ data, onEdit, onDelete, ...rest }: Props) {
   const [modalVisible, setModalVisible] = useState(false);
@@ -38,8 +37,8 @@ export function ApiaryItem({ data, onEdit, onDelete, ...rest }: Props) {
           onCloseModal={() => setModalVisible(false)}
           visible={modalVisible}
           apiary={data}
-          onEdit={() => onEdit()}
-          onDelete={() => onDelete}
+          onEdit={data => onEdit(data)}
+          onDelete={() => onDelete(data.id)}
         />
       </HStack>
     </TouchableOpacity>
