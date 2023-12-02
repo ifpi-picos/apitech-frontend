@@ -8,11 +8,9 @@ import Modal from "./Modal";
 
 type Props = TouchableOpacityProps & {
   data: ApiaryDTO;
-  onEdit: (apiary: ApiaryDTO) => void;
-  onDelete: (apiaryId: number) => void;
 }
 
-export function ApiaryItem({ data, onEdit, onDelete, ...rest }: Props) {
+export function ApiaryItem({ data, ...rest }: Props) {
   const [modalVisible, setModalVisible] = useState(false);
 
   return (
@@ -37,8 +35,9 @@ export function ApiaryItem({ data, onEdit, onDelete, ...rest }: Props) {
           onCloseModal={() => setModalVisible(false)}
           visible={modalVisible}
           apiary={data}
-          onEdit={data => onEdit(data)}
-          onDelete={() => onDelete(data.id)}
+          ApiaryEdit={data}
+          
+
         />
       </HStack>
     </TouchableOpacity>
