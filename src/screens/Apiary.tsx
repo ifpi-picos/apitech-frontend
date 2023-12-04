@@ -38,6 +38,7 @@ export function Apiary() {
 
   function handleOpenApiaryDetails(apiaryID: number) {
     navigation.navigate('Apiario_Detalhes', { apiaryID });
+    setLoading(!loading);
   }
 
   function handleAddApiary(usuarioId: number) {
@@ -100,6 +101,7 @@ export function Apiary() {
 
         {isLoadingApiarys ? <HStack space={8} flex={1} justifyContent="center" alignItems="center">
           <Spinner color="emerald.500" size="lg" />
+          <Text color="emerald.500" fontSize="lg">Carregando...</Text>
         </HStack> :
           <FlatList
             data={apiarys}

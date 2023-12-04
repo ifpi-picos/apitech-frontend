@@ -65,8 +65,8 @@ export default function Modal({ apiary, ApiaryEdit, onCloseModal, ...props }: Mo
 
   const handleDelete = async (apiaryId: number) => {
     try {
-      const response = await api.delete(`/apiarios/${apiaryId}`);
       setisLoading(true);
+      const response = await api.delete(`/apiarios/${apiaryId}`);
       if (response.status === 200) {
         fetchApiarys();
         toast.show({

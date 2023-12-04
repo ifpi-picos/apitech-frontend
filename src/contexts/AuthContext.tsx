@@ -23,6 +23,9 @@ export type AuthContextDataProps = {
   isLoadingApiarys: boolean;
   handleDeleteUser: () => Promise<void>;
   updateUserProfile: (userUpdate: UserDTO) => Promise<void>;
+  fetchApiaryDetails: (apiaryID: number) => Promise<void>;
+  isLoadingHives: boolean;
+  setIsLoadingHives: React.Dispatch<React.SetStateAction<boolean>>;
 
 }
 
@@ -36,7 +39,7 @@ export function AuthContextProvider({ children }: AuthContextProviderProps) {
   const toast = useToast();
   const [isLoading, setIsLoading] = useState(false);
   const [isLoadingApiarys, setIsLoadingApiarys] = useState(true);
-
+  const [isLoadingHives, setIsLoadingHives] = useState(true);
   const [apiarys, setApiarys] = useState<ApiaryDTO[]>([]);
   const [hive, setHive] = useState<HiveDTO[]>([])
 
@@ -228,8 +231,34 @@ export function AuthContextProvider({ children }: AuthContextProviderProps) {
     }
   }
 
+  async function fetchApiaryDetails(apiaryID: number) {
+    try {
+      setIsLoadingHives(true);
+      const response = await api.get(`/colmeias?apiarioId=${apiaryID}`);
+      setHive(response.data);
+    } catch (error: any) {
+      if (error.response && error.response.data && error.response.data.mensagem) {
+
+        toast.show({
+          title: error.response.data.mensagem,
+          placement: 'top',
+          bgColor: 'yellow.700',
+        });
+      } else {
+
+        toast.show({
+          title: 'Ocorreu um erro no servidor.',
+          placement: 'top',
+          bgColor: 'red.500',
+        });
+      }
+    } finally {
+      setIsLoadingHives(false);
+    }
+  }
+
   return (
-    <AuthContext.Provider value={{ user, singIn, isLoading, isLoadingUserStorageData, singOut, apiarys, hive, setHive, fetchApiarys, setApiarys, isLoadingApiarys, handleDeleteUser, updateUserProfile }}>
+    <AuthContext.Provider value={{ user, singIn, isLoading, isLoadingUserStorageData, singOut, apiarys, hive, setHive, fetchApiarys, setApiarys, isLoadingApiarys, handleDeleteUser, updateUserProfile, fetchApiaryDetails, isLoadingHives, setIsLoadingHives }}>
       {children}
     </AuthContext.Provider>
   )

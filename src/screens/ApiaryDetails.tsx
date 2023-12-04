@@ -38,9 +38,11 @@ export function ApiaryDetails() {
   const [hideData, setHideData] = useState<ApiaryDTO>({} as ApiaryDTO);
   const [showLoading, setShowLoading] = useState(true);
 
+  const [reload, setReload] = useState(true);
+
   const navigation = useNavigation<AppNavigatorRoutesProps>();
 
-  const { apiarys, hive, setApiarys, setHive } = useAuth();
+  const { apiarys, hive, setApiarys, setHive, fetchApiaryDetails, isLoadingHives, setIsLoadingHives } = useAuth();
 
   const route = useRoute();
   const toast = useToast();
@@ -56,38 +58,13 @@ export function ApiaryDetails() {
     navigation.navigate("Apiário");
   }
 
-  async function fetchApiaryDetails() {
-    try {
-      setIsLoading(true);
-      const response = await api.get(`/colmeias?apiarioId=${apiaryID}`);
-      setHive(response.data);
-    } catch (error: any) {
-      if (error.response && error.response.data && error.response.data.mensagem) {
-
-        toast.show({
-          title: error.response.data.mensagem,
-          placement: 'top',
-          bgColor: 'yellow.700',
-        });
-      } else {
-
-        toast.show({
-          title: 'Ocorreu um erro no servidor.',
-          placement: 'top',
-          bgColor: 'red.500',
-        });
-      }
-    } finally {
-      setIsLoading(false);
-    }
-  }
+  
   async function createHive(data: number) {
     try {
-      setIsLoading(true);
+      setIsLoadingHives(true);
       const response = await api.post(`/colmeias`, { apiarioId: data});
       if(response.status === 201) {
         setHive([...hive, response.data]);
-        console.log(response.data)
         toast.show({
           title: 'Colmeia criada com sucesso!',
           placement: 'top',
@@ -113,7 +90,7 @@ export function ApiaryDetails() {
         });
       }
     } finally {
-      setIsLoading(false);
+      setIsLoadingHives(false);
     }
   }
 
@@ -125,17 +102,50 @@ export function ApiaryDetails() {
   const isVertical = windowDimensions.height > windowDimensions.width; // Verifica se a orientação é vertical
 
   useEffect(() => {
-    fetchApiaryDetails();
-    apiarys.forEach(apiary => {
-      if (apiary.id === apiaryID) {
-        setApiaryData(apiary);
+    
+    try{
+      setReload(true);
+      fetchApiaryDetails(apiaryID);
+      apiarys.forEach(apiary => {
+        if (apiary.id === apiaryID) {
+          setApiaryData(apiary);
+        }
+      })
+    }
+    catch (error: any) {
+      if (error.response && error.response.data && error.response.data.mensagem) {
+
+        toast.show({
+          title: error.response.data.mensagem,
+          placement: 'top',
+          bgColor: 'yellow.700',
+        });
+      } else {
+
+        toast.show({
+          title: 'Ocorreu um erro no servidor.',
+          placement: 'top',
+          bgColor: 'red.500',
+        });
+        
+        setReload(false);
       }
-    })
+    } finally {
+      setReload(false);
+    }
   }, [apiaryID]);
 
   return (
     <VStack flex={1}>
-      <VStack px={isVertical ? 8 : 32} bg="GREEN" pt={isVertical ? 16 : 4} rounded="xl">
+      {
+        isLoadingHives ? (
+          <HStack space={4} flex={1} justifyContent="center" alignItems="center">
+            <Spinner color="emerald.500" size="lg" />
+            <Text color="emerald.500" fontSize="lg">Carregando...</Text>
+          </HStack> 
+        ) : 
+        <>
+          <VStack px={isVertical ? 8 : 32} bg="GREEN" pt={isVertical ? 16 : 4} rounded="xl">
         <HStack alignItems="center" justifyContent="space-between">
           <TouchableOpacity onPress={handleGoBack}>
             <Icon as={Feather} name="arrow-left" size={8} color="gray.700" />
@@ -178,7 +188,7 @@ export function ApiaryDetails() {
           >
             <Text textTransform="capitalize" fontSize="md">
               Apiário:{' '}
-                {isLoading ? (
+                {isLoadingHives ? (
                   <HStack space={8} flex={1} justifyContent="center" alignItems="center">
                     <Spinner color="emerald.500" size="sm" />
                   </HStack> 
@@ -190,7 +200,7 @@ export function ApiaryDetails() {
             </Text>
             <Text fontSize="lg" ml={2}>
               Total Colmeias: {' '}
-                {isLoading ? (
+                {isLoadingHives ? (
                   <HStack space={8} flex={1} justifyContent="center" alignItems="center">
                     <Spinner color="emerald.500" size="sm" />
                   </HStack> 
@@ -207,9 +217,10 @@ export function ApiaryDetails() {
       </VStack>
       <VStack flex={1} px={isVertical ? 0 : 20}>
 
-        {isLoading ? (
-          <HStack space={8} pt={32} flex={1} justifyContent="center" alignItems="center">
+        {isLoadingHives ? (
+          <HStack space={4} flex={1} justifyContent="center" alignItems="center">
             <Spinner color="emerald.500" size="lg" />
+            <Text color="emerald.500" fontSize="lg">Carregando...</Text>
           </HStack> 
         ) :
           <FlatList
@@ -236,7 +247,7 @@ export function ApiaryDetails() {
                   <HStack space={2} justifyContent="center">
                     <Spinner accessibilityLabel="Loading posts" />
                     <Heading color="emerald.500" fontSize="md">
-                      Carregando n
+                      Carregando...
                     </Heading>
                   </HStack>
                 ) : null
@@ -249,28 +260,9 @@ export function ApiaryDetails() {
             />
         }
       </VStack>
+        </>
+      }
+      
     </VStack>
   );
 }
-
-{/* <FlatList
-          px={8}
-          py={4}
-          data={hive}
-          keyExtractor={(item) => item.id.toString()}
-          renderItem={({ item }) => (
-            <HiveItem
-              onPress={() => handleOpenApiaryDetails}
-              data={item}
-              key={item.id}
-            />
-
-          )}
-          showsVerticalScrollIndicator={false}
-          _contentContainerStyle={{ pb: 10, display: "flex", flexDirection: "row", gap: 4, flexWrap: "wrap", justifyContent: "space-evenly"}}
-          contentContainerStyle={hive.length === 0 &&  { flex: 1, justifyContent: "center" }}
-          ListEmptyComponent={() => (
-            <Text fontSize="lg" textAlign="center">Nenhuma Colmeia cadastrada</Text>
-            )
-          }
-          /> */}
