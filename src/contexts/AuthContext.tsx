@@ -257,6 +257,8 @@ export function AuthContextProvider({ children }: AuthContextProviderProps) {
     }
   }
 
+  
+
   return (
     <AuthContext.Provider value={{ user, singIn, isLoading, isLoadingUserStorageData, singOut, apiarys, hive, setHive, fetchApiarys, setApiarys, isLoadingApiarys, handleDeleteUser, updateUserProfile, fetchApiaryDetails, isLoadingHives, setIsLoadingHives }}>
       {children}

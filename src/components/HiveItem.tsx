@@ -12,26 +12,32 @@ type Props = TouchableOpacityProps & {
 
 
 export function HiveItem({ data, ...rest }: Props) {
-  const { fetchApiarys, fetchApiaryDetails } = useAuth();
+  const { fetchApiaryDetails } = useAuth();
   const toast = useToast();
 
-  function handleDeleteHive(id: number) {
+  async function handleDeleteHive(id: number) {
     try {
-      api.delete(`/colmeias/${id}`);
-      fetchApiaryDetails(data.apiarioId);
-      toast.show({
-        title: 'Colmeia excluída com sucesso',
-        placement: 'top',
-        bgColor: 'green.500',
-      });
+      const response = await api.delete(`/colmeias/${id}`);
+      if(response.status === 200) {
+        fetchApiaryDetails(data.apiarioId);
+        toast.show({
+          title: `Colmeia ${data.numero} excluída com sucesso!`,
+          placement: 'top',
+          bgColor: 'green.500',
+        });
+        
+      }
     }
     catch (error) {
       console.log(error);
       toast.show({
-        title: 'Erro ao excluir o Colmeia',
+        title: `Erro ao excluir a Colmeia ${data.numero}`,
         placement: 'top',
         bgColor: 'red.500',
       });
+    }
+    finally {
+      fetchApiaryDetails(data.apiarioId);
     }
   }
   return (

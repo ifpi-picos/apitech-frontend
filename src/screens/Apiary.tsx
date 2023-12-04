@@ -111,6 +111,8 @@ export function Apiary() {
                 key={item.id}
                 data={item}
                 onPress={() => handleOpenApiaryDetails(item.id)}
+                onEdit={()=>{}}
+                onDelete={()=>{}}
               />
             )}
             showsVerticalScrollIndicator={false}
