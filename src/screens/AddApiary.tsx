@@ -1,4 +1,4 @@
-import { Center, HStack, Icon, Input, VStack, useToast, Text } from "native-base";
+import { Center, HStack, Icon, Input, VStack, useToast, Text, Spinner } from "native-base";
 import { ScreenHeader } from "../components/ScreenHeader";
 import { ScrollView, TouchableOpacity, useWindowDimensions } from "react-native";
 import { useForm, Controller } from "react-hook-form";
@@ -27,6 +27,7 @@ export function AddApiary() {
   const [isLoading, setIsLoading] = useState(false);
   const toast = useToast();
   const navigation = useNavigation<AppNavigatorRoutesProps>();
+  const [nameApiary, setNameApiary] = useState(false);
 
   const { control, handleSubmit, formState: { errors } } = useForm<AddApiaryProps>({
     resolver: yupResolver(addApiarySchema)
@@ -36,11 +37,11 @@ export function AddApiary() {
   async function handleAddApiary(data: ApiaryDTO) {
     try {
       setIsLoading(true);
+      setNameApiary(true);
       const response = await api.post('/apiarios', data);
 
       if (response.status === 201) {
         setApiarys([...apiarys, response.data]);
-        console.log(response.data);
         toast.show({
           title: 'Apiário cadastrado com sucesso!',
           placement: 'top',
@@ -53,7 +54,6 @@ export function AddApiary() {
     } catch (error: any) {
       if (error.response && error.response.data && error.response.data.mensagem) {
         setIsLoading(false);
-  
         toast.show({
           title: error.response.data.mensagem,
           placement: 'top',
@@ -70,6 +70,8 @@ export function AddApiary() {
       }
     } finally {
       setIsLoading(false);
+      setNameApiary(false);
+
     }
   }
 
@@ -87,8 +89,18 @@ export function AddApiary() {
       showsVerticalScrollIndicator={false}
     >
       <VStack flex={1} px={isVertical ? 8 : 32}>
+        {
+        nameApiary ? (
+        <HStack space={4} flex={1} justifyContent="center" alignItems="center">
+          <Spinner color="emerald.500" size="lg" />
+          <Text color="emerald.500" fontSize="xl">Criando Apiário...</Text>
+        </HStack> 
+        )
+        :
         <VStack flex={1} pt={12} pb={40} mb={8}>
-
+          <Text py={2} fontSize="xl">
+            Informe o nome do Apiário:
+          </Text>
           <Controller
             control={control}
             name="nome"
@@ -97,9 +109,11 @@ export function AddApiary() {
             render={({ field: { onChange, value } }) => (
               <Input
                 color="gray.100"
-                fontSize="lg"
+                fontSize="xl"
+                height={16}
                 placeholder="Nome do Apiário"
                 onChangeText={onChange}
+                onSubmitEditing={handleSubmit(handleAddApiary as any)}
                 bg="gray.500"
                 returnKeyType="send"
                 errorMessage={errors.nome?.message}
@@ -113,12 +127,13 @@ export function AddApiary() {
             isLoading={isLoading}
           />
           <HStack justifyContent="center">
-            <TouchableOpacity onPress={handleGoback} style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', borderWidth: 1, paddingHorizontal: 8, paddingVertical: 2, borderRadius: 10 }}>
+            <TouchableOpacity disabled={isLoading} onPress={handleGoback} style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', borderWidth: 1, paddingHorizontal: 8, paddingVertical: 2, borderRadius: 10 }}>
               <Icon as={Feather} name="arrow-left" size={8} color="gray.700" />
-              <Text fontSize="xl">Voltar</Text>
+              <Text fontSize="xxl" px={6} py={4}>Voltar</Text>
             </TouchableOpacity>
             </HStack>
         </VStack>
+        }
       </VStack>
       </ScrollView>
     </VStack >

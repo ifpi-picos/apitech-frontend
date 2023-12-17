@@ -20,6 +20,7 @@ export function Apiary() {
 
   const route = useRoute();
   const [showLoading, setShowLoading] = useState(true);
+  const [visibleItems, setVisibleItems] = useState(7);
 
   const { apiarys, fetchApiarys, user, isLoadingApiarys, hive } = useAuth();
 
@@ -32,8 +33,11 @@ export function Apiary() {
 
   // const { usuarioId } = route.params as AddApiaryParamsProps;
 
+  
+
   const loadMoreItems = () => {
-    setShowLoading(false);
+    const increment = 7; // Quantidade de itens a serem adicionados
+    setVisibleItems((prevVisibleItems) => prevVisibleItems + increment);
   };
 
   function handleOpenApiaryDetails(apiaryID: number) {
@@ -99,45 +103,38 @@ export function Apiary() {
 
 
 
-        {isLoadingApiarys ? <HStack space={8} flex={1} justifyContent="center" alignItems="center">
+        {isLoadingApiarys ? (<HStack space={8} flex={1} justifyContent="center" alignItems="center">
           <Spinner color="emerald.500" size="lg" />
           <Text color="emerald.500" fontSize="lg">Carregando...</Text>
-        </HStack> :
-          <FlatList
-            data={apiarys}
-            keyExtractor={(item) => item.id.toString()}
-            renderItem={({ item }) => (
-              <ApiaryItem
-                key={item.id}
-                data={item}
-                onPress={() => handleOpenApiaryDetails(item.id)}
-                onEdit={()=>{}}
-                onDelete={()=>{}}
-              />
-            )}
-            showsVerticalScrollIndicator={false}
-            onEndReached={loadMoreItems}
-            onEndReachedThreshold={0.1}
-            _contentContainerStyle={{ pb: 10 }}
-            contentContainerStyle={apiarys.length === 0 && { flex: 1, justifyContent: "center" }}
-            ListFooterComponent={() => (
-              showLoading ? (
-                <HStack space={2} justifyContent="center">
-                  <Spinner accessibilityLabel="Loading posts" />
-                  <Heading color="emerald.500" fontSize="md">
-                    Carregando
-                  </Heading>
-                </HStack>
-              ) : null
-            )}
-            ListEmptyComponent={() => (
-              <Text fontSize="lg" textAlign="center">Nenhum Apiário cadastrado</Text>
-            )}
-          />}
-
-      </VStack>
-
-
+        </HStack>) :
+          (
+            <FlatList
+              data={apiarys.slice(0, visibleItems)} // Mostra apenas os itens até visibleItems
+              keyExtractor={(item) => item.id.toString()}
+              renderItem={({ item }) => (
+                <ApiaryItem
+                  key={item.id}
+                  data={item}
+                  onPress={() => handleOpenApiaryDetails(item.id)}
+                  // onEdit={() => {}}
+                  // onDelete={()=>{}}
+                />
+              )}
+              showsVerticalScrollIndicator={false}
+              ListFooterComponent={() => (
+                // Mostra o botão para carregar mais itens se houver mais para carregar
+                apiarys.length > visibleItems && (
+                  <Center my={4}>
+                    <TouchableOpacity onPress={loadMoreItems}>
+                      <Text color="emerald.500" fontSize="lg">Carregar mais...</Text>
+                    </TouchableOpacity>
+                  </Center>
+                ) || <></>
+              )}
+              // Restante das propriedades do FlatList
+            />
+          )}
+        </VStack>
     </VStack>
   )
 };

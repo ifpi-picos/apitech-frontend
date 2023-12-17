@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
+import React, { useRef, useState } from 'react';
 import { Alert, ModalProps as ModalPropsReact, Modal as ModalReact, StyleSheet, Text, Pressable, View } from 'react-native';
-import { Button, Center, FormControl, Input, WarningOutlineIcon, useToast } from 'native-base';
+import { AlertDialog, Button, Center, FormControl, Input, WarningOutlineIcon, useToast } from 'native-base';
 import { ApiaryDTO } from '../dtos/ApiaryDTO';
 import { api } from '../services/api';
 import { string } from 'yup';
@@ -24,6 +24,8 @@ export default function Modal({ apiary, ApiaryEdit, onCloseModal, ...props }: Mo
 
   const [modalVisible, setModalVisible] = useState(false);
   const [isLoading, setisLoading] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
+
   const toast = useToast();
   const { fetchApiarys } = useAuth();
   const [ApiEditName, setApiEditName] = useState<ApiaryEdit>({
@@ -93,128 +95,176 @@ export default function Modal({ apiary, ApiaryEdit, onCloseModal, ...props }: Mo
   function handleText(nome: string) {
     setApiEditName({ ...ApiEditName, name: nome });
   }
+  const onClose = () => {
+    setIsOpen(false)
+    handleDelete(apiary.id);
+  };
+  const onCloseCancel = () => {
+    setIsOpen(false)
+  };
+
+  const cancelRef = useRef(null);
+
+  function handleDeleteApiary() {
+    setIsOpen(!isOpen)
+  }
 
 
   return (
-    <ModalReact
-      animationType="slide"
-      transparent={true}
-      visible={modalVisible}
-      onRequestClose={() => {
-        Alert.alert('Modal has been closed.');
-        onCloseModal();
-      }}
-      {...props}
-    >
-      <View
-        style={{
-          flex: 1,
-          justifyContent: 'center',
-          alignItems: 'center',
-          backgroundColor: 'rgba(0, 0, 0, 0.6)',
-          gap: 20,
+    <>
+      <ModalReact
+        animationType="slide"
+        transparent={true}
+        visible={modalVisible}
+        onRequestClose={() => {
+          Alert.alert('Modal has been closed.');
+          onCloseModal();
         }}
+        {...props}
       >
-        <Center rounded={'xl'} w="80%" backgroundColor="gray.100" px={8} py={6}>
+        <View
+          style={{
+            flex: 1,
+            justifyContent: 'center',
+            alignItems: 'center',
+            backgroundColor: 'rgba(0, 0, 0, 0.6)',
+            gap: 20,
+          }}
+        >
+          <Center rounded={'xl'} w="80%" backgroundColor="gray.100" px={8} py={6}>
 
-          <FormControl 
-            isRequired
-            isInvalid={ApiEditName.name === ''}
-          >
-            <FormControl.Label>
-              <Text 
+            <FormControl 
+              isRequired
+              isInvalid={ApiEditName.name === ''}
+            >
+              <FormControl.Label>
+                <Text 
+                  style={{
+                    fontSize: 20,
+                    color: '#000',
+                  }}>
+                  Edite o Nome
+                </Text>
+              </FormControl.Label>
+              <Input
+                fontSize={20}
+                color="gray.700"
+                marginBottom={4}
+                borderWidth={2}
+                borderColor={'gray.700'}
+                rounded='lg'
+                onChangeText={(nome) => handleText(nome)} 
+                value={ApiEditName.name}
+                placeholder="Insira um Nome" 
+              />
+              <FormControl.ErrorMessage mb={4} leftIcon={<WarningOutlineIcon size="xs" />}>
+                Campo não pode ser vazio
+              </FormControl.ErrorMessage>
+              <Button
+
                 style={{
-                  fontSize: 20,
-                  color: '#000',
-                }}>
-                Edite o Nome
-              </Text>
-            </FormControl.Label>
-            <Input
-              fontSize={20}
-              color="gray.700"
-              marginBottom={4}
-              borderWidth={2}
-              borderColor={'gray.700'}
-              rounded='lg'
-              onChangeText={(nome) => handleText(nome)} 
-              value={ApiEditName.name}
-              placeholder="Insira um Nome" 
-            />
-            <FormControl.ErrorMessage mb={4} leftIcon={<WarningOutlineIcon size="xs" />}>
-              Campo não pode ser vazio
-            </FormControl.ErrorMessage>
-            <Button
-
-              style={{
-                borderRadius: 10,
-                paddingHorizontal: 4,
-                marginBottom: 10,
-              }}
-              isLoading={isLoading}
-
-              isDisabled={ApiEditName.name === ''}
-              _disabled={{
-                opacity: 0.8,
-              }}
-              
-              onPress={() => handleEdit(ApiEditName)}>
-              <Text
-                style={{
-                  fontSize: 20,
-                  fontWeight: 'bold',
-                  color: '#fff',
-                  paddingHorizontal: 16,
-                  paddingVertical: 8,
+                  borderRadius: 10,
+                  paddingHorizontal: 4,
+                  marginBottom: 10,
                 }}
-                >
-                Salvar Alterações
+                isLoading={isLoading}
+
+                isDisabled={ApiEditName.name === ''}
+                _disabled={{
+                  opacity: 0.8,
+                }}
+                
+                onPress={() => handleEdit(ApiEditName)}>
+                <Text
+                  style={{
+                    fontSize: 20,
+                    fontWeight: 'bold',
+                    color: '#fff',
+                    paddingHorizontal: 16,
+                    paddingVertical: 8,
+                  }}
+                  >
+                  Salvar Alterações
+                </Text>
+              </Button>
+            </FormControl>
+          </Center>
+          <Button
+            style={{
+              borderRadius: 10,
+              paddingHorizontal: 4,
+              marginBottom: 10,
+              backgroundColor: '#F03434',
+            }}
+            isLoading={isLoading}
+            onPress={handleDeleteApiary}>
+            <Text
+              style={{
+                fontSize: 20,
+                fontWeight: 'bold',
+                color: '#fff',
+                paddingHorizontal: 16,
+                paddingVertical: 8,
+              }}
+            >
+              Excluir Apiário
+            </Text>
+          </Button>
+          <Pressable
+            style={{
+              borderRadius: 10,
+              paddingHorizontal: 4,
+              marginBottom: 10,
+              backgroundColor: '#727171',
+            }}
+            onPress={() => onCloseModal()}>
+            <Text
+              style={{
+                fontSize: 20,
+                fontWeight: 'bold',
+                color: '#fff',
+                paddingHorizontal: 16,
+                paddingVertical: 8,
+              }}
+            >
+              Fechar
+            </Text>
+          </Pressable>
+        </View>
+      </ModalReact>
+      {
+        <AlertDialog leastDestructiveRef={cancelRef} isOpen={isOpen} onClose={onCloseCancel}>
+        <AlertDialog.Content>
+          <AlertDialog.CloseButton />
+          <AlertDialog.Header>Cancelar</AlertDialog.Header>
+          <AlertDialog.Body flex={1} px={4} alignItems="center">
+            <Text style={{textAlign:"center", fontSize: 22}}>
+              Deseja realmente 
+              {" "}
+              <Text style={{fontSize: 22, fontWeight: "bold"}}>
+                Apagar
               </Text>
-            </Button>
-          </FormControl>
-        </Center>
-        <Button
-          style={{
-            borderRadius: 10,
-            paddingHorizontal: 4,
-            marginBottom: 10,
-            backgroundColor: '#F03434',
-          }}
-          isLoading={isLoading}
-          onPress={() => handleDelete(apiary.id)}>
-          <Text
-            style={{
-              fontSize: 20,
-              fontWeight: 'bold',
-              color: '#fff',
-              paddingHorizontal: 16,
-              paddingVertical: 8,
-            }}
-          >
-            Excluir Apiário
-          </Text>
-        </Button>
-        <Pressable
-          style={{
-            borderRadius: 10,
-            paddingHorizontal: 4,
-            marginBottom: 10,
-            backgroundColor: '#727171',
-          }}
-          onPress={() => onCloseModal()}>
-          <Text
-            style={{
-              fontSize: 20,
-              fontWeight: 'bold',
-              color: '#fff',
-              paddingHorizontal: 16,
-              paddingVertical: 8,
-            }}
-          >
-            Fechar
-          </Text>
-        </Pressable>
-      </View>
-    </ModalReact>
+              {" "}
+              apiário Permanentemente?
+            </Text>
+          </AlertDialog.Body>
+          <AlertDialog.Footer>
+            <Button.Group space={2} flex={1} alignItems="center" justifyContent="space-around">
+              <Button variant="unstyled" py={4} borderWidth={1} flex={1} colorScheme="coolGray" onPress={onCloseCancel} ref={cancelRef}>
+                <Text style={{fontSize: 22}}>
+                  Cancelar
+                </Text>
+              </Button>
+              <Button colorScheme="danger" py={4} flex={1} onPress={onClose}>
+                <Text style={{color: "white", fontSize: 22}}>
+                  Apagar
+                </Text>
+              </Button>
+            </Button.Group>
+          </AlertDialog.Footer>
+        </AlertDialog.Content>
+      </AlertDialog>
+      }
+    </>
   )
 }

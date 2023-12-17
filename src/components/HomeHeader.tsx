@@ -70,7 +70,7 @@ export function HomeHeader() {
           <AlertDialog.Header>Sair</AlertDialog.Header>
           <AlertDialog.Body flex={1} alignItems="center">
             <Text fontFamily="heading" fontSize="xl">
-              Desejar realmente sair?
+              Deseja realmente sair?
             </Text>
           </AlertDialog.Body>
           <AlertDialog.Footer>

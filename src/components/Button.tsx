@@ -22,7 +22,7 @@ export function Button({ title, variant = "solid", ...rest }: Props) {
       <Text 
         color= "WHITE"
         fontFamily="heading"
-        fontSize="lg"
+        fontSize="xxl"
       >
         {title}
       </Text>
