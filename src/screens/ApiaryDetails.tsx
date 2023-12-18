@@ -27,6 +27,7 @@ import { useAuth } from "../hooks/useAuth";
 import { api } from "../services/api";
 import { ApiaryDTO } from "../dtos/ApiaryDTO";
 import { HiveDTO } from "../dtos/HiveDTO";
+import Pagination from "../components/Pagination";
 
 type RouteParamsProps = {
   apiaryID: number;
@@ -39,6 +40,11 @@ export function ApiaryDetails() {
   const [showLoading, setShowLoading] = useState(true);
 
   const [reload, setReload] = useState(true);
+
+  const [hiveList, setHiveList] = useState([]) as any; // Estado para armazenar a lista de apiários
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 10;
+
 
   const navigation = useNavigation<AppNavigatorRoutesProps>();
 
@@ -106,6 +112,7 @@ export function ApiaryDetails() {
     try{
       setReload(true);
       fetchApiaryDetails(apiaryID);
+      setHiveList(hive);
       apiarys.forEach(apiary => {
         if (apiary.id === apiaryID) {
           setApiaryData(apiary);
@@ -134,6 +141,16 @@ export function ApiaryDetails() {
       setReload(false);
     }
   }, [apiaryID]);
+
+  const handlePaginationChange = (page: any) => {
+    setCurrentPage(page);
+  };
+
+  const renderApiariesForCurrentPage = () => {
+    const startIndex = (currentPage - 1) * itemsPerPage;
+    const endIndex = startIndex + itemsPerPage;
+    return hive.slice(startIndex, endIndex);
+  };
 
   return (
     <VStack flex={1}>
@@ -216,7 +233,14 @@ export function ApiaryDetails() {
         </HStack>
       </VStack>
       <VStack flex={1} px={isVertical ? 0 : 20}>
-
+      <Box m={2} backgroundColor="gray.100" rounded="md">
+          <Pagination 
+            // totalPages={10}
+            totalPages={Math.ceil(hive.length / itemsPerPage)}
+            currentPage={currentPage}
+            onPageChange={handlePaginationChange}
+          />
+        </Box>       
         {isLoadingHives ? (
           <HStack space={4} flex={1} justifyContent="center" alignItems="center">
             <Spinner color="emerald.500" size="lg" />
@@ -227,7 +251,7 @@ export function ApiaryDetails() {
               px={8}
               py={4}
               pb={32}
-              data={hive}
+              data={renderApiariesForCurrentPage()}
               keyExtractor={(item) => item.id.toString()}
               renderItem={({ item }) => (
                 <HiveItem

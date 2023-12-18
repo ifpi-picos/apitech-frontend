@@ -1,6 +1,6 @@
 import { ActivityIndicator, TouchableOpacity, useWindowDimensions } from "react-native";
 import { useNavigation, useRoute } from "@react-navigation/native";
-import { Center, Text, VStack, Icon, Heading, HStack, FlatList, useToast, Spinner } from "native-base";
+import { Center, Text, VStack, Icon, Heading, HStack, FlatList, useToast, Spinner, Box } from "native-base";
 import { Entypo } from '@expo/vector-icons';
 
 import { AppNavigatorRoutesProps } from "../routes/app.routes"
@@ -13,6 +13,7 @@ import { useAuth } from "../hooks/useAuth";
 
 import { useIsFocused } from '@react-navigation/native';
 import { AuthNavigatorRoutesProps } from "../routes/auth.routes";
+import Pagination from "../components/Pagination";
 
 
 export function Apiary() {
@@ -33,6 +34,10 @@ export function Apiary() {
 
   // const { usuarioId } = route.params as AddApiaryParamsProps;
 
+  const [apiarysList, setApiarysList] = useState([]) as any; // Estado para armazenar a lista de apiários
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 10;
+
   
 
   const loadMoreItems = () => {
@@ -52,7 +57,18 @@ export function Apiary() {
   useEffect(() => {
     fetchApiarys();
     setShowLoading(true);
+    setApiarysList(apiarys);
   }, []);
+
+  const handlePaginationChange = (page: any) => {
+    setCurrentPage(page);
+  };
+
+  const renderApiariesForCurrentPage = () => {
+    const startIndex = (currentPage - 1) * itemsPerPage;
+    const endIndex = startIndex + itemsPerPage;
+    return apiarys.slice(startIndex, endIndex);
+  };
 
   return (
     <VStack flex={1}>
@@ -85,10 +101,10 @@ export function Apiary() {
       </ScreenHeader>
 
       <VStack flex={1} pt={4} px={isVertical ? 8 : 32}>
-        <HStack justifyContent="space-between" mb={4}>
+        <HStack justifyContent="flex-start" alignItems="center" mb={2}>
           <Heading fontFamily="heading" fontSize="lg">Meus Apiários</Heading>
           <Text fontSize="lg" ml={2}>
-            Total:{' '}
+            {'( '}Total:{' '}
             {isLoadingApiarys ? (
               <HStack space={8} px={2} flex={1} justifyContent="center" alignItems="center">
                 <Spinner color="emerald.500" size="sm" />
@@ -98,10 +114,17 @@ export function Apiary() {
                 {apiarys.length < 10 ? `0${apiarys.length}` : apiarys.length}
               </Text>
             }
+            {' )'}
           </Text>
         </HStack>
-
-
+        <Box mb={4} backgroundColor="gray.100" rounded="md">
+          <Pagination 
+            // totalPages={10}
+            totalPages={Math.ceil(apiarys.length / itemsPerPage)}
+            currentPage={currentPage}
+            onPageChange={handlePaginationChange}
+          />
+        </Box>
 
         {isLoadingApiarys ? (<HStack space={8} flex={1} justifyContent="center" alignItems="center">
           <Spinner color="emerald.500" size="lg" />
@@ -109,7 +132,8 @@ export function Apiary() {
         </HStack>) :
           (
             <FlatList
-              data={apiarys.slice(0, visibleItems)} // Mostra apenas os itens até visibleItems
+              // data={apiarys.slice(0, visibleItems)}
+              data={renderApiariesForCurrentPage()}
               keyExtractor={(item) => item.id.toString()}
               renderItem={({ item }) => (
                 <ApiaryItem
@@ -121,16 +145,7 @@ export function Apiary() {
                 />
               )}
               showsVerticalScrollIndicator={false}
-              ListFooterComponent={() => (
-                // Mostra o botão para carregar mais itens se houver mais para carregar
-                apiarys.length > visibleItems && (
-                  <Center my={4}>
-                    <TouchableOpacity onPress={loadMoreItems}>
-                      <Text color="emerald.500" fontSize="lg">Carregar mais...</Text>
-                    </TouchableOpacity>
-                  </Center>
-                ) || <></>
-              )}
+              
               // Restante das propriedades do FlatList
             />
           )}
